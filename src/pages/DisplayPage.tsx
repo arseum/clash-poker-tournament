@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTournamentStore } from '../store/tournamentStore';
 import { formatTime, formatChips } from '../constants';
+import { calculatePrizes, getPaidPlaces, positionLabel } from '../utils/prizePool';
 
 // Mapping arena (same as App.tsx)
 const ARENA_MAP = [1,2,3,4,5,5,6,6,7,7,8,8,9,10,11,12,13,14,15,15];
@@ -37,9 +38,11 @@ export function DisplayPage() {
   const currentLevel = config.blindStructure[currentLevelIndex];
   const nextLevel = config.blindStructure[currentLevelIndex + 1];
   const activePlayers = players.filter(p => !p.isEliminated);
-  const totalChips = activePlayers.length * config.startingStack + tournament.rebuyCount * config.startingStack;
+  const totalChips = (players.length + tournament.rebuyCount) * config.startingStack;
   const avgStack = activePlayers.length > 0 ? Math.floor(totalChips / activePlayers.length) : 0;
   const totalPot = (players.length + tournament.rebuyCount) * config.buyIn;
+  const prizes = calculatePrizes(totalPot, players.length);
+  const paidPlaces = getPaidPlaces(players.length);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning = secondsRemaining <= 60 && !currentLevel.isBreak;
   const arenaNumber = getArenaNumber(currentLevelIndex);

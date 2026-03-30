@@ -9,6 +9,7 @@ import { useTournamentStore } from '../store/tournamentStore';
 import { useHistoryStore } from '../store/historyStore';
 import { useTimer } from '../hooks/useTimer';
 import { formatTime, formatChips } from '../constants';
+import { calculatePrizes, getPaidPlaces, positionLabel } from '../utils/prizePool';
 import type { Page } from '../types';
 
 interface TournamentPageProps {
@@ -86,9 +87,11 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
   const { config, players, currentLevelIndex, secondsRemaining, isRunning } = tournament;
   const currentLevel = config.blindStructure[currentLevelIndex];
   const nextLevelData = config.blindStructure[currentLevelIndex + 1];
-  const totalChips = activePlayers.length * config.startingStack + tournament.rebuyCount * config.startingStack;
+  const totalChips = (players.length + tournament.rebuyCount) * config.startingStack;
   const avgStack = activePlayers.length > 0 ? Math.floor(totalChips / activePlayers.length) : 0;
   const totalPot = (players.length + tournament.rebuyCount) * config.buyIn;
+  const prizes = calculatePrizes(totalPot, players.length);
+  const paidPlaces = getPaidPlaces(players.length);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning = secondsRemaining <= 60 && !currentLevel.isBreak;
 
@@ -216,6 +219,43 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
               )}
             </CRCard>
           </div>
+
+          {/* Prize pool */}
+          <CRCard>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-cinzel text-base font-bold text-[#27ae60] flex items-center gap-2">
+                <Trophy size={16} className="text-[#f4c842]" /> Prize Pool — {totalPot}€
+              </h2>
+              <span className="text-[#4a5568] text-xs">ITM : {paidPlaces}/{players.length} joueurs</span>
+            </div>
+            <div className="flex flex-col gap-1 max-h-40 overflow-y-auto pr-1">
+              {prizes.map(({ position, percentage, amount }) => (
+                <div
+                  key={position}
+                  className={`flex items-center justify-between rounded px-3 py-1.5 text-sm ${
+                    position === 1 ? 'bg-[#f4c842]/10 border border-[#f4c842]/30' :
+                    position === 2 ? 'bg-white/5 border border-white/10' :
+                    position === 3 ? 'bg-[#cd7f32]/10 border border-[#cd7f32]/20' :
+                    'bg-[#0d1b2a]'
+                  }`}
+                >
+                  <span className={`font-cinzel font-bold w-8 ${position <= 3 ? 'text-[#f4c842]' : 'text-[#4a5568]'}`}>
+                    {positionLabel(position)}
+                  </span>
+                  <div className="flex-1 mx-3">
+                    <div className="h-1.5 bg-[#0d1b2a] rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-[#27ae60]"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                  <span className="text-[#a0aec0] text-xs w-10 text-right">{percentage}%</span>
+                  <span className="font-cinzel font-bold text-[#27ae60] w-16 text-right">{amount}€</span>
+                </div>
+              ))}
+            </div>
+          </CRCard>
         </div>
 
         {/* Players sidebar */}
