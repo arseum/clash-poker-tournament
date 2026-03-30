@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cr-gold: #f4c842;
+  --color-cr-gold-dark: #c49a1e;
+  --color-cr-blue: #1a3a6b;
+  --color-cr-blue-mid: #2456a4;
+  --color-cr-blue-light: #4a8fd4;
+  --color-cr-purple: #6b2fa0;
+  --color-cr-red: #c0392b;
+  --color-cr-green: #27ae60;
+  --color-cr-dark: #0d1b2a;
+  --color-cr-darker: #070f18;
+  --color-cr-card: #1a2d4a;
+  --color-cr-card-border: #2a4a7a;
+  --font-cinzel: 'Cinzel', serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-cr-darker);
+  color: #e8e8e8;
+  font-family: var(--font-inter);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, .font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+@keyframes slideUp {
+  from { transform: translate(-50%, 20px); opacity: 0; }
+  to   { transform: translate(-50%, 0);    opacity: 1; }
+}
