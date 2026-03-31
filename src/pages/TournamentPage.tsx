@@ -89,9 +89,10 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
   const nextLevelData = config.blindStructure[currentLevelIndex + 1];
   const totalChips = (players.length + tournament.rebuyCount) * config.startingStack;
   const avgStack = activePlayers.length > 0 ? Math.floor(totalChips / activePlayers.length) : 0;
-  const totalPot = (players.length + tournament.rebuyCount) * config.buyIn;
-  const prizes = calculatePrizes(totalPot, players.length);
-  const paidPlaces = getPaidPlaces(players.length);
+  const totalPot        = (players.length + tournament.rebuyCount) * config.buyIn;
+  const prizePoolAmount = Math.round(totalPot * config.prizePool.prizePoolPct / 100);
+  const prizes          = calculatePrizes(prizePoolAmount, players.length, config.prizePool);
+  const paidPlaces      = getPaidPlaces(players.length, config.prizePool.itmPct);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning = secondsRemaining <= 60 && !currentLevel.isBreak;
 
@@ -224,7 +225,7 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
           <CRCard>
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-cinzel text-base font-bold text-[#27ae60] flex items-center gap-2">
-                <Trophy size={16} className="text-[#f4c842]" /> Prize Pool — {totalPot}€
+                <Trophy size={16} className="text-[#f4c842]" /> Prize Pool — {prizePoolAmount}€
               </h2>
               <span className="text-[#4a5568] text-xs">ITM : {paidPlaces}/{players.length} joueurs</span>
             </div>

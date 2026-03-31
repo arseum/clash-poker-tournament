@@ -3,8 +3,9 @@ import { Plus, Users, ChevronRight, Trash2, UserPlus } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRInput } from '../components/ui/CRInput';
+import { PrizePoolSetupCard } from '../components/PrizePoolSetupCard';
 import { useTournamentStore } from '../store/tournamentStore';
-import { DEFAULT_BLIND_STRUCTURE } from '../constants';
+import { DEFAULT_BLIND_STRUCTURE, DEFAULT_PRIZE_POOL_CONFIG } from '../constants';
 import type { TournamentConfig, Page } from '../types';
 
 interface SetupPageProps {
@@ -20,6 +21,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
     startingStack: 10000,
     maxPlayersPerTable: 9,
     blindStructure: DEFAULT_BLIND_STRUCTURE,
+    prizePool: DEFAULT_PRIZE_POOL_CONFIG,
   });
 
   const [playerNames, setPlayerNames] = useState<string[]>(['', '']);
@@ -195,6 +197,16 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
               <Plus size={16} /> Ajouter un joueur
             </CRButton>
           </CRCard>
+
+          {/* Prize pool setup */}
+          <div className="md:col-span-2">
+            <PrizePoolSetupCard
+              buyIn={config.buyIn}
+              playerCount={validPlayers.length}
+              prizePool={config.prizePool}
+              onChange={pp => setConfig(c => ({ ...c, prizePool: pp }))}
+            />
+          </div>
 
           {/* Blind structure preview */}
           <CRCard className="md:col-span-2">

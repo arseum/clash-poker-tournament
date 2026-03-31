@@ -1,4 +1,15 @@
-import type { BlindLevel } from './types';
+import type { BlindLevel, PrizePoolConfig } from './types';
+
+export const DEFAULT_PRIZE_POOL_CONFIG: PrizePoolConfig = {
+  prizePoolPct: 100,
+  killPct: 0,
+  rakePct: 0,
+  itmPct: 15,
+  distributionMode: 'auto',
+  paliers: [],
+  manualShares: [],
+  killSystem: { type: 'fixed', amountPerKill: 0 },
+};
 
 export const DEFAULT_BLIND_STRUCTURE: BlindLevel[] = [
   { level: 1, smallBlind: 25, bigBlind: 50, ante: 0, duration: 20 },

@@ -40,9 +40,10 @@ export function DisplayPage() {
   const activePlayers = players.filter(p => !p.isEliminated);
   const totalChips = (players.length + tournament.rebuyCount) * config.startingStack;
   const avgStack = activePlayers.length > 0 ? Math.floor(totalChips / activePlayers.length) : 0;
-  const totalPot = (players.length + tournament.rebuyCount) * config.buyIn;
-  const prizes = calculatePrizes(totalPot, players.length);
-  const paidPlaces = getPaidPlaces(players.length);
+  const totalPot        = (players.length + tournament.rebuyCount) * config.buyIn;
+  const prizePoolAmount = Math.round(totalPot * config.prizePool.prizePoolPct / 100);
+  const prizes          = calculatePrizes(prizePoolAmount, players.length, config.prizePool);
+  const paidPlaces      = getPaidPlaces(players.length, config.prizePool.itmPct);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning = secondsRemaining <= 60 && !currentLevel.isBreak;
   const arenaNumber = getArenaNumber(currentLevelIndex);
