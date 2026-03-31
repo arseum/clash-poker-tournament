@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Users, ChevronRight, Trash2 } from 'lucide-react';
+import { Plus, Users, ChevronRight, Trash2, UserPlus } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRInput } from '../components/ui/CRInput';
@@ -23,6 +23,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
   });
 
   const [playerNames, setPlayerNames] = useState<string[]>(['', '']);
+  const [bulkCount, setBulkCount] = useState(8);
   const [showResumePrompt, setShowResumePrompt] = useState(!!tournament);
 
   const addPlayer = () => setPlayerNames(prev => [...prev, '']);
@@ -30,6 +31,14 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
   const updatePlayer = (idx: number, name: string) => {
     setPlayerNames(prev => prev.map((n, i) => i === idx ? name : n));
   };
+  const addBulkPlayers = () => {
+    setPlayerNames(prev => {
+      const base = prev.length;
+      const newPlayers = Array.from({ length: bulkCount }, (_, i) => `Joueur ${base + i + 1}`);
+      return [...prev, ...newPlayers];
+    });
+  };
+  const clearPlayers = () => setPlayerNames(['', '']);
 
   const validPlayers = playerNames.filter(n => n.trim().length > 0);
   const canStart = validPlayers.length >= 2 && config.name.trim().length > 0;
@@ -118,15 +127,50 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
 
           {/* Players card */}
           <CRCard>
-            <h2 className="font-cinzel text-lg font-bold text-[#f4c842] mb-4 flex items-center gap-2">
-              <Users size={20} /> Joueurs ({validPlayers.length})
-            </h2>
-            <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-1">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-cinzel text-lg font-bold text-[#f4c842] flex items-center gap-2">
+                <Users size={20} /> Joueurs ({validPlayers.length})
+              </h2>
+              {playerNames.length > 2 && (
+                <button
+                  onClick={clearPlayers}
+                  className="text-[#4a5568] hover:text-[#e74c3c] text-xs transition-colors flex items-center gap-1"
+                  title="Vider la liste"
+                >
+                  <Trash2 size={13} /> Tout effacer
+                </button>
+              )}
+            </div>
+
+            {/* Ajout en masse */}
+            <div className="flex gap-2 items-center mb-3 p-2 bg-[#0d1b2a] rounded-lg border border-[#2a4a7a]">
+              <UserPlus size={16} className="text-[#4a8fd4] flex-shrink-0" />
+              <span className="text-[#a0aec0] text-sm flex-shrink-0">Ajouter</span>
+              <input
+                type="number"
+                value={bulkCount}
+                onChange={e => setBulkCount(Math.max(1, Math.min(50, Number(e.target.value))))}
+                className="w-14 bg-[#1a2d4a] border border-[#2a4a7a] rounded px-2 py-1 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                min={1}
+                max={50}
+              />
+              <span className="text-[#a0aec0] text-sm flex-shrink-0">joueurs</span>
+              <CRButton
+                variant="ghost"
+                size="sm"
+                onClick={addBulkPlayers}
+                className="ml-auto flex-shrink-0"
+              >
+                Ajouter
+              </CRButton>
+            </div>
+
+            <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '16rem' }}>
               {playerNames.map((name, idx) => (
-                <div key={idx} className="flex gap-2 items-center">
-                  <span className="text-[#4a8fd4] text-sm w-6 text-right">{idx + 1}.</span>
-                  <CRInput
-                    className="flex-1"
+                <div key={idx} className="flex items-stretch rounded-lg border border-[#2a4a7a] flex-shrink-0" style={{ overflow: 'hidden', minHeight: '2.5rem' }}>
+                  <span className="text-[#4a8fd4] text-sm w-7 flex items-center justify-end pr-1.5 bg-[#0d1b2a] flex-shrink-0">{idx + 1}.</span>
+                  <input
+                    className="flex-1 bg-[#0d1b2a] px-2 py-2 text-white placeholder-[#4a5568] text-sm focus:outline-none focus:bg-[#1a2d4a] transition-colors min-w-0"
                     placeholder={`Joueur ${idx + 1}`}
                     value={name}
                     onChange={e => updatePlayer(idx, e.target.value)}
@@ -134,9 +178,9 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                   {playerNames.length > 2 && (
                     <button
                       onClick={() => removePlayer(idx)}
-                      className="text-[#c0392b] hover:text-[#e74c3c] transition-colors p-1"
+                      className="bg-[#c0392b]/20 hover:bg-[#c0392b] text-[#c0392b] hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   )}
                 </div>

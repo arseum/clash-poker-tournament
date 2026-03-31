@@ -267,15 +267,15 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
             {activePlayers.map(player => (
               <div
                 key={player.id}
-                className="flex items-center justify-between bg-[#0d1b2a] rounded-lg px-3 py-2 group"
+                className="flex items-stretch rounded-lg overflow-hidden border border-[#1a2d4a] hover:border-[#c0392b]/40 transition-colors"
               >
-                <span className="text-[#e8e8e8] text-sm font-medium">{player.name}</span>
+                <span className="flex-1 text-[#e8e8e8] text-sm font-medium px-3 py-2 bg-[#0d1b2a]">{player.name}</span>
                 <button
                   onClick={() => eliminatePlayer(player.id)}
-                  className="text-[#4a5568] hover:text-[#e74c3c] transition-colors opacity-0 group-hover:opacity-100"
+                  className="bg-[#c0392b]/20 hover:bg-[#c0392b] text-[#c0392b] hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
                   title="Éliminer"
                 >
-                  <UserMinus size={16} />
+                  <UserMinus size={15} />
                 </button>
               </div>
             ))}

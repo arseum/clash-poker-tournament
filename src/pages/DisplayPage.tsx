@@ -131,7 +131,7 @@ export function DisplayPage() {
         </div>
 
         {/* Bottom stats */}
-        <div className="grid grid-cols-3 border-t border-white/10">
+        <div className="grid grid-cols-4 border-t border-white/10">
           <div className="flex flex-col items-center py-8 border-r border-white/10">
             <div className="text-[#a0aec0] text-lg uppercase tracking-widest mb-3 font-cinzel">Joueurs restants</div>
             <div className="font-cinzel font-black text-[#f4c842] leading-none" style={{ fontSize: '5rem' }}>
@@ -145,10 +145,49 @@ export function DisplayPage() {
               {formatChips(avgStack)}
             </div>
           </div>
-          <div className="flex flex-col items-center py-8">
+          <div className="flex flex-col items-center py-8 border-r border-white/10">
             <div className="text-[#a0aec0] text-lg uppercase tracking-widest mb-3 font-cinzel">Pot total</div>
             <div className="font-cinzel font-black text-[#27ae60] leading-none" style={{ fontSize: '5rem' }}>
               {totalPot}€
+            </div>
+          </div>
+
+          {/* Prize pool */}
+          <div className="flex flex-col py-6 px-6 min-h-0">
+            <div className="text-[#a0aec0] text-lg uppercase tracking-widest mb-3 font-cinzel text-center">
+              Prize Pool <span className="text-[#4a5568] text-base normal-case">ITM {paidPlaces}/{players.length}</span>
+            </div>
+            {/* Conteneur masquant, sans scrollbar */}
+            <div className="overflow-hidden" style={{ height: '7.5rem' }}>
+              <div
+                className="flex flex-col gap-1.5"
+                style={prizes.length > 3 ? {
+                  animation: `prizeScroll ${prizes.length * 2.5}s ease-in-out infinite alternate`,
+                  '--prize-scroll-dist': `-${(prizes.length - 3) * 34}px`,
+                } as React.CSSProperties : undefined}
+              >
+                {prizes.map(({ position, percentage, amount }) => (
+                  <div
+                    key={position}
+                    className={`flex items-center gap-2 rounded px-2 py-1 text-sm flex-shrink-0 ${
+                      position === 1 ? 'bg-[#f4c842]/10' :
+                      position === 2 ? 'bg-white/5' :
+                      position === 3 ? 'bg-[#cd7f32]/10' : ''
+                    }`}
+                  >
+                    <span className={`font-cinzel font-bold w-7 text-sm ${position <= 3 ? 'text-[#f4c842]' : 'text-[#4a5568]'}`}>
+                      {positionLabel(position)}
+                    </span>
+                    <div className="flex-1">
+                      <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full bg-[#27ae60]" style={{ width: `${percentage}%` }} />
+                      </div>
+                    </div>
+                    <span className="text-[#4a5568] text-xs w-9 text-right">{percentage}%</span>
+                    <span className="font-cinzel font-bold text-[#27ae60] text-sm w-16 text-right">{amount}€</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

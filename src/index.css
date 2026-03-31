@@ -38,3 +38,8 @@ h1, h2, h3, .font-cinzel {
   from { transform: translate(-50%, 20px); opacity: 0; }
   to   { transform: translate(-50%, 0);    opacity: 1; }
 }
+
+@keyframes prizeScroll {
+  0%, 15%   { transform: translateY(0); }
+  85%, 100% { transform: translateY(var(--prize-scroll-dist, 0px)); }
+}
