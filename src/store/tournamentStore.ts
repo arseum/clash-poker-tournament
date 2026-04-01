@@ -73,6 +73,7 @@ export const useTournamentStore = create<TournamentStore>()(
             secondsRemaining: firstLevel.duration * 60,
             isRunning: false,
             isPaused: false,
+            isEnded: false,
             startedAt: null,
             rebuyCount: 0,
           }
@@ -248,7 +249,7 @@ export const useTournamentStore = create<TournamentStore>()(
       endTournament: () => set(state => {
         if (!state.tournament) return state;
         return {
-          tournament: { ...state.tournament, isRunning: false, isPaused: false }
+          tournament: { ...state.tournament, isRunning: false, isPaused: false, isEnded: true }
         };
       }),
 

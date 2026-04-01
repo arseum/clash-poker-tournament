@@ -78,6 +78,7 @@ export interface TournamentState {
   secondsRemaining: number;
   isRunning: boolean;
   isPaused: boolean;
+  isEnded: boolean;
   startedAt: number | null;
   rebuyCount: number;
 }
