@@ -12,28 +12,27 @@ export function getPaidPlaces(playerCount: number, itmPct: number): number {
   return Math.max(1, Math.round(playerCount * (itmPct / 100)));
 }
 
-// ─── Auto distribution: formule Winamax / nombre d'or ────────────────────────
+// ─── Auto distribution: loi de puissance 1/k^α ───────────────────────────────
 //
-// f(n) = (c / √5) × [ φ^(n+1) + (−1)^n × φ^(−(n+1)) ]
-//   φ  = (1 + √5) / 2  ≈ 1.618
-//   c  = ln(φ) / ln(J)
-//   J  = places payées, n = rang interne (n=J → 1er)
+// weight(k) = 1 / k^α  où k=1 est le vainqueur
+// α s'adapte à la taille du champ pour éviter les montants nuls :
+//   petit champ (≤9)   → α élevé = pyramide marquée
+//   grand champ (≥200) → α faible = distribution plus équitable
 //
-const PHI   = (1 + Math.sqrt(5)) / 2;
-const SQRT5 = Math.sqrt(5);
-
-function fibWeight(n: number, J: number): number {
-  const c = Math.log(PHI) / Math.log(J);
-  return (c / SQRT5) * (
-    Math.pow(PHI,  n + 1) +
-    Math.pow(-1, n) * Math.pow(PHI, -(n + 1))
-  );
+function autoAlpha(J: number): number {
+  if (J <= 3)   return 2.0;
+  if (J <= 9)   return 1.5;
+  if (J <= 20)  return 1.2;
+  if (J <= 50)  return 1.0;
+  if (J <= 150) return 0.85;
+  return 0.70;
 }
 
 function distributeAuto(totalPot: number, J: number): PrizeEntry[] {
   if (J <= 0) return [];
   if (J === 1) return [{ position: 1, percentage: 100, amount: totalPot }];
-  const weights = Array.from({ length: J }, (_, i) => fibWeight(J - i, J));
+  const alpha   = autoAlpha(J);
+  const weights = Array.from({ length: J }, (_, i) => 1 / Math.pow(i + 1, alpha));
   const totalW  = weights.reduce((s, w) => s + w, 0);
   return weights.map((w, i) => ({
     position:   i + 1,
