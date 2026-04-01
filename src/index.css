@@ -1,23 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Lilita+One&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   TAILWIND THEME TOKENS  — default (Poker Night)
+   @theme creates CSS custom properties on :root AND generates
+   utility classes (bg-cr-gold → background-color: var(--color-cr-gold))
+   ============================================================ */
 @theme {
-  --color-cr-gold: #f4c842;
-  --color-cr-gold-dark: #c49a1e;
-  --color-cr-blue: #1a3a6b;
-  --color-cr-blue-mid: #2456a4;
-  --color-cr-blue-light: #4a8fd4;
-  --color-cr-purple: #6b2fa0;
-  --color-cr-red: #c0392b;
-  --color-cr-green: #27ae60;
-  --color-cr-dark: #0d1b2a;
-  --color-cr-darker: #070f18;
-  --color-cr-card: #1a2d4a;
+  --color-cr-gold:        #f4c842;
+  --color-cr-gold-dark:   #c49a1e;
+  --color-cr-blue:        #1a3a6b;
+  --color-cr-blue-mid:    #2456a4;
+  --color-cr-blue-light:  #4a8fd4;
+  --color-cr-purple:      #6b2fa0;
+  --color-cr-red:         #c0392b;
+  --color-cr-green:       #27ae60;
+  --color-cr-dark:        #0d1b2a;
+  --color-cr-darker:      #070f18;
+  --color-cr-card:        #1a2d4a;
   --color-cr-card-border: #2a4a7a;
   --font-cinzel: 'Cinzel', serif;
-  --font-inter: 'Inter', sans-serif;
+  --font-inter:  'Inter', sans-serif;
 }
 
+/* ============================================================
+   DEFAULT THEME extra vars (not Tailwind tokens)
+   ============================================================ */
+:root {
+  --theme-heading-font:      'Cinzel', serif;
+  --theme-overlay-color:     rgba(7, 15, 24, 0.50);
+  --theme-gold-glow:         rgba(244, 200, 66, 0.30);
+  --theme-gold-glow-strong:  rgba(244, 200, 66, 0.55);
+  --theme-btn-radius:        0.75rem;
+}
+
+/* ============================================================
+   SUPERCELL THEME — Clash Royale / Clash of Clans universe
+   Overrides the @theme CSS vars so all Tailwind classes update
+   ============================================================ */
+[data-theme="supercell"] {
+  /* Override @theme-generated CSS vars */
+  --color-cr-gold:        #ffd700;
+  --color-cr-gold-dark:   #e65100;
+  --color-cr-blue:        #4a1500;
+  --color-cr-blue-mid:    #c95200;
+  --color-cr-blue-light:  #ff9a3c;
+  --color-cr-purple:      #9c27b0;
+  --color-cr-red:         #d32f2f;
+  --color-cr-green:       #2e7d32;
+  --color-cr-dark:        #1c0900;
+  --color-cr-darker:      #0f0500;
+  --color-cr-card:        #2d1500;
+  --color-cr-card-border: #8b4513;
+
+  /* Extra vars */
+  --theme-heading-font:      'Lilita One', 'Cinzel', serif;
+  --theme-overlay-color:     rgba(15, 5, 0, 0.55);
+  --theme-gold-glow:         rgba(255, 215, 0, 0.35);
+  --theme-gold-glow-strong:  rgba(255, 140, 0, 0.70);
+  --theme-btn-radius:        9999px;
+}
+
+/* ============================================================
+   GLOBAL BASE STYLES
+   ============================================================ */
 * {
   box-sizing: border-box;
 }
@@ -25,15 +71,61 @@
 body {
   background-color: var(--color-cr-darker);
   color: #e8e8e8;
-  font-family: var(--font-inter);
+  font-family: var(--theme-body-font, 'Inter', sans-serif);
   margin: 0;
   padding: 0;
+  transition: background-color 0.4s ease;
 }
 
 h1, h2, h3, .font-cinzel {
-  font-family: var(--font-cinzel);
+  font-family: var(--theme-heading-font);
 }
 
+/* ============================================================
+   APP BACKGROUNDS (control interface — no arena images)
+   ============================================================ */
+
+/* Default: dark poker night */
+.bg-app-default {
+  background:
+    radial-gradient(ellipse at 50% 0%, #0d1b2a 0%, #070f18 60%, #040c12 100%);
+}
+
+/* Supercell: warm dark with ember hints */
+.bg-app-supercell {
+  background:
+    radial-gradient(ellipse at 50% 0%, #2d1500 0%, #0f0500 60%, #080200 100%);
+}
+
+/* ============================================================
+   SHARED COMPONENT HELPERS
+   ============================================================ */
+
+/* Gold glow border — used by CRCard gold variant */
+.card-gold-glow {
+  border: 2px solid var(--color-cr-gold) !important;
+  box-shadow: 0 0 20px var(--theme-gold-glow);
+}
+
+[data-theme="supercell"] .card-gold-glow {
+  box-shadow: 0 0 28px var(--theme-gold-glow-strong),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Supercell stone texture on cards */
+[data-theme="supercell"] .cr-card-bg {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 3px,
+    rgba(139, 69, 19, 0.06) 3px,
+    rgba(139, 69, 19, 0.06) 6px
+  );
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 @keyframes slideUp {
   from { transform: translate(-50%, 20px); opacity: 0; }
   to   { transform: translate(-50%, 0);    opacity: 1; }
@@ -42,4 +134,21 @@ h1, h2, h3, .font-cinzel {
 @keyframes prizeScroll {
   0%, 15%   { transform: translateY(0); }
   85%, 100% { transform: translateY(var(--prize-scroll-dist, 0px)); }
+}
+
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 8px var(--theme-gold-glow); }
+  50%       { box-shadow: 0 0 24px var(--theme-gold-glow-strong); }
+}
+
+@keyframes podiumRise {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatParticle {
+  0%   { opacity: 0;   transform: translateY(0)    scale(1); }
+  15%  { opacity: 0.9; }
+  85%  { opacity: 0.6; }
+  100% { opacity: 0;   transform: translateY(-80px) scale(0.3); }
 }
