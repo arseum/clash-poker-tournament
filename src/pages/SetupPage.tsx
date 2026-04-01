@@ -4,6 +4,7 @@ import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRInput } from '../components/ui/CRInput';
 import { PrizePoolSetupCard } from '../components/PrizePoolSetupCard';
+import { BlindStructureEditor } from '../components/BlindStructureEditor';
 import { useTournamentStore } from '../store/tournamentStore';
 import { DEFAULT_BLIND_STRUCTURE, DEFAULT_PRIZE_POOL_CONFIG } from '../constants';
 import type { TournamentConfig, Page } from '../types';
@@ -208,44 +209,15 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
             />
           </div>
 
-          {/* Blind structure preview */}
+          {/* Blind structure editor */}
           <CRCard className="md:col-span-2">
             <h2 className="font-cinzel text-lg font-bold text-[#f4c842] mb-4">
               📋 Structure des blindes
             </h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="text-[#4a8fd4] border-b border-[#2a4a7a]">
-                    <th className="text-left py-2 px-3">Niv.</th>
-                    <th className="text-right py-2 px-3">Petite blinde</th>
-                    <th className="text-right py-2 px-3">Grande blinde</th>
-                    <th className="text-right py-2 px-3">Ante</th>
-                    <th className="text-right py-2 px-3">Durée</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {config.blindStructure.map(level => (
-                    <tr
-                      key={level.level}
-                      className={`border-b border-[#1a2d4a] ${level.isBreak ? 'bg-[#6b2fa0]/10 text-[#9b59b6]' : 'text-[#e8e8e8] hover:bg-[#1a3a6b]/30'}`}
-                    >
-                      <td className="py-1.5 px-3 font-bold">{level.level}</td>
-                      {level.isBreak ? (
-                        <td colSpan={3} className="py-1.5 px-3 text-center font-bold tracking-widest">— PAUSE —</td>
-                      ) : (
-                        <>
-                          <td className="py-1.5 px-3 text-right">{level.smallBlind.toLocaleString()}</td>
-                          <td className="py-1.5 px-3 text-right">{level.bigBlind.toLocaleString()}</td>
-                          <td className="py-1.5 px-3 text-right">{level.ante > 0 ? level.ante.toLocaleString() : '-'}</td>
-                        </>
-                      )}
-                      <td className="py-1.5 px-3 text-right text-[#a0aec0]">{level.duration}min</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <BlindStructureEditor
+              structure={config.blindStructure}
+              onChange={bs => setConfig(c => ({ ...c, blindStructure: bs }))}
+            />
           </CRCard>
         </div>
 
