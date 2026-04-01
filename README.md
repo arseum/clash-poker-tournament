@@ -9,6 +9,6 @@ Currently, two official plugins are available:
 
 ## run
 
-```
+```bash
 npm run dev
 ```
