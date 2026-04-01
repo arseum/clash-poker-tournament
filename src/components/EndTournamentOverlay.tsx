@@ -131,7 +131,6 @@ export function EndTournamentOverlay({ tournament, onClose }: EndTournamentOverl
                 animation: isRevealed ? `podiumRise 0.7s ease-out both` : undefined,
                 opacity: isRevealed ? 1 : 0,
                 transform: isRevealed ? 'translateY(0)' : 'translateY(40px)',
-                transition: 'opacity 0.1s',
               }}
               className="flex flex-col items-center"
             >
