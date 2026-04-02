@@ -23,6 +23,8 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
     maxPlayersPerTable: 9,
     blindStructure: DEFAULT_BLIND_STRUCTURE,
     prizePool: DEFAULT_PRIZE_POOL_CONFIG,
+    smallestChip: 25,
+    reEntry: null,
   });
 
   const [playerNames, setPlayerNames] = useState<string[]>(['', '']);
@@ -125,6 +127,56 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                 min={2}
                 max={10}
               />
+              <CRInput
+                label="Plus petit jeton"
+                type="number"
+                value={config.smallestChip}
+                onChange={e => setConfig(c => ({ ...c, smallestChip: Math.max(1, Number(e.target.value)) }))}
+                min={1}
+              />
+              <div className="flex flex-col gap-2">
+                <label className="text-sm text-[#a0aec0] font-medium">Re-entry</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="reentry-toggle"
+                    checked={config.reEntry !== null}
+                    onChange={e => setConfig(c => ({
+                      ...c,
+                      reEntry: e.target.checked ? { maxLevel: 4, maxPerPlayer: 1 } : null,
+                    }))}
+                    className="accent-[#f4c842] cursor-pointer w-4 h-4"
+                  />
+                  <label htmlFor="reentry-toggle" className="text-sm text-[#e8e8e8] cursor-pointer">
+                    Autoriser le re-entry
+                  </label>
+                </div>
+                {config.reEntry && (
+                  <div className="grid grid-cols-2 gap-3 pl-1">
+                    <CRInput
+                      label="Jusqu'au niveau"
+                      type="number"
+                      value={config.reEntry.maxLevel}
+                      onChange={e => setConfig(c => ({
+                        ...c,
+                        reEntry: c.reEntry ? { ...c.reEntry, maxLevel: Math.max(1, Number(e.target.value)) } : null,
+                      }))}
+                      min={1}
+                      max={config.blindStructure.length}
+                    />
+                    <CRInput
+                      label="Max par joueur (0=∞)"
+                      type="number"
+                      value={config.reEntry.maxPerPlayer}
+                      onChange={e => setConfig(c => ({
+                        ...c,
+                        reEntry: c.reEntry ? { ...c.reEntry, maxPerPlayer: Math.max(0, Number(e.target.value)) } : null,
+                      }))}
+                      min={0}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </CRCard>
 
@@ -217,6 +269,11 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
             <BlindStructureEditor
               structure={config.blindStructure}
               onChange={bs => setConfig(c => ({ ...c, blindStructure: bs }))}
+              playerCount={validPlayers.length}
+              startingStack={config.startingStack}
+              maxPlayersPerTable={config.maxPlayersPerTable}
+              smallestChip={config.smallestChip}
+              reEntry={config.reEntry}
             />
           </CRCard>
         </div>
