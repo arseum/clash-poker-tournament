@@ -1,3 +1,73 @@
+## Architecture du projet — Poker Royale
+
+> **LIS CETTE SECTION EN PREMIER.** Elle évite de rescanner le projet à chaque session.
+
+### Stack
+- React 19 + TypeScript 5 + Vite 8
+- Tailwind CSS 4 (via `@import "tailwindcss"` dans `index.css`, pas de `tailwind.config.js`)
+- Zustand 5 (state management + persistence localStorage)
+- Lucide React (icônes)
+
+### Arborescence clé
+```
+src/
+  main.tsx              — entry point. Si ?display → DisplayPage, sinon App
+  App.tsx               — routing (setup/tournament/tables/history) + fond thématique
+  index.css             — @theme Tailwind + CSS variables thèmes + animations
+
+  contexts/
+    ThemeContext.tsx     — ThemeProvider, useTheme(), THEMES, THEME_LABELS
+                          Thèmes : 'default' (Poker Night) | 'supercell' (CoC/CR)
+                          Stocké dans localStorage 'poker-theme'
+                          Applique data-theme sur <html>, synchro storage events (TV display)
+
+  components/
+    Navigation.tsx       — nav bar + sélecteur de thème (icône Palette)
+    ui/CRButton.tsx      — bouton (variants: gold/blue/red/green/ghost), border-radius via --theme-btn-radius
+    ui/CRCard.tsx        — carte (prop gold= → .card-gold-glow), classe .cr-card-bg (texture)
+    ui/CRInput.tsx       — input stylisé
+    ui/CRBadge.tsx       — badge (variants: gold/blue/red/green/purple)
+    BlindStructureEditor.tsx
+    PrizePoolSetupCard.tsx
+    EndTournamentOverlay.tsx
+
+  pages/
+    SetupPage.tsx        — config tournoi, joueurs, blindes, prize pool
+    TournamentPage.tsx   — timer live, niveaux, éliminations
+    TablesPage.tsx       — assignation des tables
+    HistoryPage.tsx      — historique des tournois
+    DisplayPage.tsx      — écran TV (?display). Theme-aware :
+                            default = fond feutre vert + ♠ watermark
+                            supercell = arena1.jpg + overlay chaud
+
+  store/
+    tournamentStore.ts   — Zustand, clé localStorage 'poker-tournament-state'
+    historyStore.ts      — Zustand, clé localStorage 'poker-history-state'
+
+  hooks/useTimer.ts      — timer avec correction de dérive
+  utils/prizePool.ts     — calcul prize pool (auto/paliers/manual)
+  types.ts               — tous les types TypeScript
+  constants.ts           — defaultBlindStructure, formatChips(), formatTime()
+```
+
+### Système de thèmes
+- CSS variables définies dans `@theme {}` (valeurs par défaut)
+- Surchargées dans `[data-theme="supercell"] {}` au runtime
+- Classes Tailwind `bg-cr-gold`, `text-cr-blue-mid`, etc. réagissent automatiquement
+- Variables clés : `--color-cr-gold`, `--color-cr-blue-mid`, `--color-cr-card`, `--color-cr-darker`, `--color-cr-card-border`
+- Variables extra (hors Tailwind) : `--theme-heading-font`, `--theme-overlay-color`, `--theme-gold-glow`, `--theme-btn-radius`
+- Supercell : font Lilita One, buttons pill (radius 9999px), palette chaude orange/brun
+- **NE PAS** utiliser de hex hardcodés dans les nouveaux composants — utiliser `bg-cr-gold` etc.
+
+### Conventions importantes
+- Composants UI préfixés `CR*` (CRButton, CRCard, etc.)
+- Pages reçoivent `onNavigate: (page: Page) => void`
+- `DisplayPage` se synchronise avec la fenêtre principale via `storage` events localStorage
+- Assets arènes : `/public/arenas/arena1.jpg` (seul fichier existant pour l'instant)
+- Pas de tests automatisés — vérifier manuellement avec `npm run build` puis `npm run dev`
+
+---
+
 ## Orchestration du flux de travail
 ### 1. Planification par défaut du nœud
 

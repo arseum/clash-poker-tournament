@@ -7,11 +7,11 @@ interface CRBadgeProps {
 }
 
 const variants = {
-  gold: 'bg-[#f4c842]/20 text-[#f4c842] border-[#f4c842]/50',
-  blue: 'bg-[#2456a4]/30 text-[#4a8fd4] border-[#2456a4]/50',
-  red: 'bg-[#c0392b]/20 text-[#e74c3c] border-[#c0392b]/50',
-  green: 'bg-[#27ae60]/20 text-[#2ecc71] border-[#27ae60]/50',
-  purple: 'bg-[#6b2fa0]/20 text-[#9b59b6] border-[#6b2fa0]/50',
+  gold:   'bg-cr-gold/20 text-cr-gold border-cr-gold/50',
+  blue:   'bg-cr-blue-mid/30 text-cr-blue-light border-cr-blue-mid/50',
+  red:    'bg-cr-red/20 text-cr-red border-cr-red/50',
+  green:  'bg-cr-green/20 text-cr-green border-cr-green/50',
+  purple: 'bg-cr-purple/20 text-cr-purple border-cr-purple/50',
 };
 
 export function CRBadge({ children, variant = 'blue', className = '' }: CRBadgeProps) {
