@@ -104,11 +104,11 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
       )}
 
       {/* Title bar */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="font-cinzel text-xl font-bold text-[#f4c842]">{config.name}</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <h1 className="font-cinzel text-base sm:text-xl font-bold text-[#f4c842] truncate min-w-0">{config.name}</h1>
+        <div className="flex gap-2 flex-shrink-0">
           <CRButton variant="ghost" size="sm" onClick={() => onNavigate('tables')}>Tables</CRButton>
-          <CRButton variant="ghost" size="sm" onClick={() => onNavigate('history')}>Historique</CRButton>
+          <CRButton variant="ghost" size="sm" onClick={() => onNavigate('history')} className="hidden sm:flex">Historique</CRButton>
           <CRButton
             variant="blue"
             size="sm"
@@ -136,35 +136,35 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
             {currentLevel.isBreak ? (
               <>
-                <div className="font-cinzel text-2xl font-bold text-[#9b59b6] mb-2">— PAUSE —</div>
-                <div className={`font-cinzel font-black text-9xl leading-none tracking-tight ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-[#e8e8e8]'}`}>
+                <div className="font-cinzel text-xl sm:text-2xl font-bold text-[#9b59b6] mb-2">— PAUSE —</div>
+                <div className={`font-cinzel font-black text-6xl sm:text-8xl md:text-9xl leading-none tracking-tight ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-[#e8e8e8]'}`}>
                   {formatTime(secondsRemaining)}
                 </div>
               </>
             ) : (
               <>
-                <div className="font-cinzel text-2xl font-bold text-[#4a8fd4] mb-1">
+                <div className="font-cinzel text-lg sm:text-2xl font-bold text-[#4a8fd4] mb-1">
                   NIVEAU {currentLevel.level}
                 </div>
-                <div className={`font-cinzel font-black text-9xl leading-none tracking-tight mb-4 ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-[#f4c842]'}`}>
+                <div className={`font-cinzel font-black text-6xl sm:text-8xl md:text-9xl leading-none tracking-tight mb-3 sm:mb-4 ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-[#f4c842]'}`}>
                   {formatTime(secondsRemaining)}
                 </div>
-                <div className="flex justify-center gap-6 text-center">
+                <div className="flex justify-center gap-3 sm:gap-6 text-center flex-wrap">
                   <div>
                     <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Petite</div>
-                    <div className="font-cinzel text-3xl font-bold text-white">{formatChips(currentLevel.smallBlind)}</div>
+                    <div className="font-cinzel text-xl sm:text-3xl font-bold text-white">{formatChips(currentLevel.smallBlind)}</div>
                   </div>
-                  <div className="text-[#4a8fd4] text-4xl font-thin self-center">/</div>
+                  <div className="text-[#4a8fd4] text-2xl sm:text-4xl font-thin self-center">/</div>
                   <div>
                     <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Grande</div>
-                    <div className="font-cinzel text-3xl font-bold text-white">{formatChips(currentLevel.bigBlind)}</div>
+                    <div className="font-cinzel text-xl sm:text-3xl font-bold text-white">{formatChips(currentLevel.bigBlind)}</div>
                   </div>
                   {currentLevel.ante > 0 && (
                     <>
-                      <div className="text-[#4a8fd4] text-4xl font-thin self-center">+</div>
+                      <div className="text-[#4a8fd4] text-2xl sm:text-4xl font-thin self-center">+</div>
                       <div>
                         <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Ante</div>
-                        <div className="font-cinzel text-3xl font-bold text-[#f4c842]">{formatChips(currentLevel.ante)}</div>
+                        <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#f4c842]">{formatChips(currentLevel.ante)}</div>
                       </div>
                     </>
                   )}
@@ -202,19 +202,19 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
           </CRCard>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <CRCard className="text-center">
               <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Joueurs</div>
-              <div className="font-cinzel text-3xl font-bold text-[#f4c842]">{activePlayers.length}</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#f4c842]">{activePlayers.length}</div>
               <div className="text-[#4a5568] text-xs">/ {players.length}</div>
             </CRCard>
             <CRCard className="text-center">
-              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Stack moyen</div>
-              <div className="font-cinzel text-3xl font-bold text-[#4a8fd4]">{formatChips(avgStack)}</div>
+              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Moy.</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#4a8fd4]">{formatChips(avgStack)}</div>
             </CRCard>
             <CRCard className="text-center">
-              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Pot total</div>
-              <div className="font-cinzel text-3xl font-bold text-[#27ae60]">{totalPot}€</div>
+              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Pot</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#27ae60]">{totalPot}€</div>
               {tournament.rebuyCount > 0 && (
                 <div className="text-[#a0aec0] text-xs">+{tournament.rebuyCount} rebuy</div>
               )}
@@ -260,7 +260,7 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
         </div>
 
         {/* Players sidebar */}
-        <CRCard className="max-h-screen overflow-y-auto">
+        <CRCard className="max-h-72 lg:max-h-screen overflow-y-auto">
           <h2 className="font-cinzel text-base font-bold text-[#f4c842] mb-3 flex items-center gap-2">
             <Trophy size={18} /> Joueurs actifs ({activePlayers.length})
           </h2>

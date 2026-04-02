@@ -97,7 +97,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-cinzel text-4xl md:text-5xl font-black text-[#f4c842] drop-shadow-[0_0_30px_rgba(244,200,66,0.5)] mb-2">
+          <h1 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-black text-[#f4c842] drop-shadow-[0_0_30px_rgba(244,200,66,0.5)] mb-2">
             ♠ POKER ROYALE ♠
           </h1>
           <p className="text-[#4a8fd4] tracking-widest text-sm uppercase">Configuration du tournoi</p>
@@ -116,7 +116,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                 onChange={e => setConfig(c => ({ ...c, name: e.target.value }))}
                 placeholder="Mon super tournoi"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <CRInput
                   label="Buy-in (€)"
                   type="number"
@@ -166,7 +166,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                   </label>
                 </div>
                 {config.reEntry && (
-                  <div className="grid grid-cols-2 gap-3 pl-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-1">
                     <CRInput
                       label="Jusqu'au niveau"
                       type="number"
@@ -281,7 +281,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
               <h2 className="font-cinzel text-lg font-bold text-[#f4c842]">
                 📋 Structure des blindes
               </h2>
-              <div className="flex items-center gap-2 ml-auto">
+              <div className="flex items-center gap-2 ml-auto flex-wrap justify-end">
                 {autoCalcState === 'input' && (
                   <>
                     <span className="text-[#a0aec0] text-sm flex-shrink-0">Durée souhaitée</span>

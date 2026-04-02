@@ -18,9 +18,9 @@ export function HistoryPage({ onNavigate }: HistoryPageProps) {
     <div className="min-h-screen p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="font-cinzel text-3xl font-bold text-[#f4c842]">Historique</h1>
+            <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-[#f4c842]">Historique</h1>
             <p className="text-[#4a8fd4] text-sm mt-1">{totalGames} tournois enregistrés</p>
           </div>
           <div className="flex gap-3">
@@ -62,7 +62,7 @@ export function HistoryPage({ onNavigate }: HistoryPageProps) {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-4 gap-3 mt-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
                   <div className="text-center">
                     <Users size={16} className="mx-auto text-[#4a8fd4] mb-1" />
                     <div className="font-cinzel font-bold text-xl text-white">{entry.playerCount}</div>

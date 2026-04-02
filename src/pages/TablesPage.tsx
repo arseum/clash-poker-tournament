@@ -31,9 +31,9 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
     <div className="min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="font-cinzel text-3xl font-bold text-[#f4c842]">Tables</h1>
+            <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-[#f4c842]">Tables</h1>
             <p className="text-[#4a8fd4] text-sm mt-1">
               {activePlayers.length} joueurs — {tables.length} tables
             </p>
@@ -77,7 +77,7 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
 
                 {/* Poker table visual */}
                 <div className="bg-[#0d1b2a] rounded-xl p-3 mb-3">
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {tablePlayers.map(player => (
                       <div
                         key={player!.id}

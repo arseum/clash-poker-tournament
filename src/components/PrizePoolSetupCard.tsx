@@ -115,24 +115,24 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
         </p>
 
         {/* Prize pool row (auto-computed, read-only) */}
-        <div className="flex items-center gap-3 mb-2">
-          <span className="w-28 text-sm font-medium text-[#27ae60]">Prize pool</span>
-          <div className="flex-1 bg-[#0d1b2a] border border-[#27ae60]/40 rounded px-3 py-2 text-center font-cinzel font-bold text-[#27ae60]">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-24 sm:w-28 text-sm font-medium text-[#27ae60]">Prize pool</span>
+          <div className="flex-1 bg-[#0d1b2a] border border-[#27ae60]/40 rounded px-2 py-2 text-center font-cinzel font-bold text-[#27ae60]">
             {prizePoolPct}%
           </div>
-          <span className="w-14 text-right text-sm font-bold text-[#27ae60]">{buyInAmountStr(prizePoolPct)}</span>
+          <span className="w-12 sm:w-14 text-right text-sm font-bold text-[#27ae60]">{buyInAmountStr(prizePoolPct)}</span>
         </div>
 
         {/* Kill system row */}
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-2 mb-2">
           <button
             onClick={toggleKill}
-            className={`w-28 text-sm font-medium flex items-center gap-2 transition-colors ${killEnabled ? 'text-[#e67e22]' : 'text-[#4a5568] hover:text-[#a0aec0]'}`}
+            className={`w-24 sm:w-28 text-sm font-medium flex items-center gap-2 transition-colors flex-shrink-0 ${killEnabled ? 'text-[#e67e22]' : 'text-[#4a5568] hover:text-[#a0aec0]'}`}
           >
             <span className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center text-[9px] transition-colors ${killEnabled ? 'bg-[#e67e22] border-[#e67e22]' : 'border-[#4a5568]'}`}>
               {killEnabled ? '✓' : ''}
             </span>
-            Kill system
+            Kill
           </button>
           {killEnabled ? (
             <input
@@ -142,21 +142,21 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
               max={100 - rakePct}
               step={1}
               onChange={e => setKillPct(Number(e.target.value))}
-              className="flex-1 bg-[#0d1b2a] border border-[#e67e22]/50 rounded px-3 py-2 text-center text-white text-sm focus:outline-none focus:border-[#e67e22]"
+              className="flex-1 bg-[#0d1b2a] border border-[#e67e22]/50 rounded px-2 py-2 text-center text-white text-sm focus:outline-none focus:border-[#e67e22]"
             />
           ) : (
-            <div className="flex-1 bg-[#0d1b2a]/30 border border-[#1a2d4a] rounded px-3 py-2 text-center text-[#2a4a7a] text-sm">désactivé</div>
+            <div className="flex-1 bg-[#0d1b2a]/30 border border-[#1a2d4a] rounded px-2 py-2 text-center text-[#2a4a7a] text-sm">désactivé</div>
           )}
-          <span className={`w-14 text-right text-sm font-bold ${killEnabled ? 'text-[#e67e22]' : 'text-[#2a4a7a]'}`}>
+          <span className={`w-12 sm:w-14 text-right text-sm font-bold ${killEnabled ? 'text-[#e67e22]' : 'text-[#2a4a7a]'}`}>
             {killEnabled ? buyInAmountStr(killPct) : '—'}
           </span>
         </div>
 
         {/* Rake row */}
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-2 mb-2">
           <button
             onClick={toggleRake}
-            className={`w-28 text-sm font-medium flex items-center gap-2 transition-colors ${rakeEnabled ? 'text-[#9b59b6]' : 'text-[#4a5568] hover:text-[#a0aec0]'}`}
+            className={`w-24 sm:w-28 text-sm font-medium flex items-center gap-2 transition-colors flex-shrink-0 ${rakeEnabled ? 'text-[#9b59b6]' : 'text-[#4a5568] hover:text-[#a0aec0]'}`}
           >
             <span className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center text-[9px] transition-colors ${rakeEnabled ? 'bg-[#9b59b6] border-[#9b59b6]' : 'border-[#4a5568]'}`}>
               {rakeEnabled ? '✓' : ''}
@@ -171,12 +171,12 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
               max={100 - killPct}
               step={1}
               onChange={e => setRakePct(Number(e.target.value))}
-              className="flex-1 bg-[#0d1b2a] border border-[#9b59b6]/50 rounded px-3 py-2 text-center text-white text-sm focus:outline-none focus:border-[#9b59b6]"
+              className="flex-1 bg-[#0d1b2a] border border-[#9b59b6]/50 rounded px-2 py-2 text-center text-white text-sm focus:outline-none focus:border-[#9b59b6]"
             />
           ) : (
-            <div className="flex-1 bg-[#0d1b2a]/30 border border-[#1a2d4a] rounded px-3 py-2 text-center text-[#2a4a7a] text-sm">désactivé</div>
+            <div className="flex-1 bg-[#0d1b2a]/30 border border-[#1a2d4a] rounded px-2 py-2 text-center text-[#2a4a7a] text-sm">désactivé</div>
           )}
-          <span className={`w-14 text-right text-sm font-bold ${rakeEnabled ? 'text-[#9b59b6]' : 'text-[#2a4a7a]'}`}>
+          <span className={`w-12 sm:w-14 text-right text-sm font-bold ${rakeEnabled ? 'text-[#9b59b6]' : 'text-[#2a4a7a]'}`}>
             {rakeEnabled ? buyInAmountStr(rakePct) : '—'}
           </span>
         </div>
@@ -207,8 +207,8 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
 
       {/* ── % ITM ─────────────────────────────────────────────────────────── */}
       <div className="mb-5">
-        <div className="flex items-center gap-3">
-          <label className="text-[#a0aec0] text-xs uppercase tracking-widest w-14">% ITM</label>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <label className="text-[#a0aec0] text-xs uppercase tracking-widest w-14 flex-shrink-0">% ITM</label>
           <input
             type="number"
             value={itmPct}
@@ -221,7 +221,7 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
           <span className="text-[#a0aec0] text-sm">
             {playerCount > 0
               ? `→ ${J} place${J > 1 ? 's' : ''} payée${J > 1 ? 's' : ''} / ${playerCount} joueur${playerCount > 1 ? 's' : ''}`
-              : "→ ajoutez des joueurs pour voir l'aperçu"}
+              : "→ ajoutez des joueurs"}
           </span>
         </div>
       </div>
@@ -305,7 +305,8 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
                 ? `${Math.round(prizePoolAmount * palier.totalPct / 100 / count)}€ chacun`
                 : null;
               return (
-                <div key={idx} className="flex items-center gap-2">
+                <div key={idx} className="overflow-x-auto">
+                <div className="flex items-center gap-2 min-w-max">
                   <span className="text-[#4a5568] text-xs w-12 flex-shrink-0">Places</span>
                   <input
                     type="number"
@@ -347,6 +348,7 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
                   >
                     <Trash2 size={14} />
                   </button>
+                </div>
                 </div>
               );
             })}

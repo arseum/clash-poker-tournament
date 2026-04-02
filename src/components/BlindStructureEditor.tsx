@@ -239,7 +239,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
               {/* Stats globales */}
               {estimate && (
                 <>
-                  <div className="grid grid-cols-3 gap-3 mb-4 text-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-center">
                     <div className="bg-[#1a2d4a] rounded-lg p-2">
                       <div className="text-xs text-[#a0aec0] mb-1">Durée totale</div>
                       <div className="text-[#f4c842] font-bold text-sm">{formatDuration(estimate.totalDurationMinutes)}</div>
