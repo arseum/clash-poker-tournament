@@ -41,7 +41,7 @@ export function DisplayPage() {
   const paidPlaces    = getPaidPlaces(players.length, config.prizePool.itmPct);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning     = secondsRemaining <= 60 && !currentLevel.isBreak;
-  const arenaNumber   = getArenaNumber(currentLevelIndex);
+  getArenaNumber(currentLevelIndex);
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
