@@ -48,13 +48,13 @@ export function DisplayPage() {
       {/* ── Background layer ── */}
       {theme === 'supercell' ? (
         <>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url('/arenas/arena${arenaNumber}.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src="/arenas/arena_test.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
           />
           <div className="absolute inset-0" style={{ background: 'rgba(15,5,0,0.60)' }} />
           {/* Supercell vignette */}
@@ -247,10 +247,14 @@ function DisplayIdle({ theme }: { theme: string }) {
     <div className="min-h-screen flex flex-col items-center justify-center gap-6 relative">
       {theme === 'supercell' ? (
         <>
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url('/arenas/arena1.jpg')`,
-            backgroundSize: 'cover', backgroundPosition: 'center',
-          }} />
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src="/arenas/arena_test.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
           <div className="absolute inset-0" style={{ background: 'rgba(15,5,0,0.65)' }} />
         </>
       ) : (
@@ -371,13 +375,13 @@ function EndScreenTV({ tournament, theme }: { tournament: TournamentState; theme
       {/* Background */}
       {isSupercell ? (
         <>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url('/arenas/arena1.jpg')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            src="/arenas/arena_test.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
           />
           <div className="absolute inset-0" style={{ background: 'rgba(15,5,0,0.80)' }} />
         </>
