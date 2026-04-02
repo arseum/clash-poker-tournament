@@ -1,5 +1,58 @@
 import type { BlindLevel, ReEntryConfig } from '../types';
 
+/**
+ * Génère une structure de blindes automatique.
+ * - BB de départ ≈ 1% du stack, arrondi au plus petit jeton
+ * - Progression x1.5 par niveau, arrondie au plus petit jeton
+ * - 12 niveaux de jeu + 2 pauses de 15 min (après niveaux 4 et 8)
+ * - Durée par niveau = (targetDurationMinutes - 30 min de pauses) / 12
+ * - Antes à partir du niveau 7 (≈ 10% de la BB)
+ */
+export function generateBlindStructure(
+  startingStack: number,
+  smallestChip: number,
+  targetDurationMinutes = 180
+): BlindLevel[] {
+  const chip = Math.max(1, smallestChip);
+  const roundTo = (n: number) => Math.max(chip, Math.round(n / chip) * chip);
+
+  const GAME_LEVELS = 12;
+  const BREAK_TIME = 2 * 15; // 2 pauses de 15 min
+  const levelDuration = Math.max(5, Math.round((targetDurationMinutes - BREAK_TIME) / GAME_LEVELS));
+
+  const startBB = roundTo(startingStack * 0.01);
+  const result: BlindLevel[] = [];
+  let gameLevel = 0;
+
+  for (let i = 0; i < GAME_LEVELS; i++) {
+    const bb = roundTo(startBB * Math.pow(1.5, i));
+    const sb = roundTo(bb / 2);
+    const ante = i >= 6 ? roundTo(bb * 0.1) : 0;
+
+    result.push({
+      level: result.length + 1,
+      smallBlind: sb,
+      bigBlind: bb,
+      ante,
+      duration: levelDuration,
+    });
+    gameLevel++;
+
+    if (gameLevel === 4 || gameLevel === 8) {
+      result.push({
+        level: result.length + 1,
+        smallBlind: 0,
+        bigBlind: 0,
+        ante: 0,
+        duration: 15,
+        isBreak: true,
+      });
+    }
+  }
+
+  return result;
+}
+
 export interface BlindValidationError {
   levelIndex: number;
   field: 'smallBlind' | 'bigBlind' | 'ante';

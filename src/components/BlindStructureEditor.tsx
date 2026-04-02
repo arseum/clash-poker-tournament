@@ -261,8 +261,8 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                         <tr className="text-[#4a8fd4] border-b border-[#2a4a7a]">
                           <th className="text-left py-1 px-2">Niv.</th>
                           <th className="text-right py-1 px-2">Durée</th>
-                          <th className="text-right py-1 px-2">Joueurs est.</th>
-                          <th className="text-right py-1 px-2">M moyen</th>
+                          <th className="text-right py-1 px-2">Joueurs restants est.</th>
+                          <th className="text-right py-1 px-2">Orbites</th>
                           <th className="text-left py-1 px-2 w-24">Santé</th>
                         </tr>
                       </thead>

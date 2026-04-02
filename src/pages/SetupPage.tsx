@@ -7,6 +7,7 @@ import { PrizePoolSetupCard } from '../components/PrizePoolSetupCard';
 import { BlindStructureEditor } from '../components/BlindStructureEditor';
 import { useTournamentStore } from '../store/tournamentStore';
 import { DEFAULT_BLIND_STRUCTURE, DEFAULT_PRIZE_POOL_CONFIG } from '../constants';
+import { generateBlindStructure } from '../utils/tournamentEstimator';
 import type { TournamentConfig, Page } from '../types';
 
 interface SetupPageProps {
@@ -30,6 +31,19 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
   const [playerNames, setPlayerNames] = useState<string[]>(['', '']);
   const [bulkCount, setBulkCount] = useState(8);
   const [showResumePrompt, setShowResumePrompt] = useState(!!tournament);
+
+  // Auto-calcul : 'idle' | 'input' | 'loading'
+  const [autoCalcState, setAutoCalcState] = useState<'idle' | 'input' | 'loading'>('idle');
+  const [targetHours, setTargetHours] = useState(3);
+
+  const handleAutoCalcGo = () => {
+    setAutoCalcState('loading');
+    const targetMinutes = Math.round(targetHours * 60);
+    setTimeout(() => {
+      setConfig(c => ({ ...c, blindStructure: generateBlindStructure(c.startingStack, c.smallestChip, targetMinutes) }));
+      setAutoCalcState('idle');
+    }, 1200);
+  };
 
   const addPlayer = () => setPlayerNames(prev => [...prev, '']);
   const removePlayer = (idx: number) => setPlayerNames(prev => prev.filter((_, i) => i !== idx));
@@ -263,18 +277,74 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
 
           {/* Blind structure editor */}
           <CRCard className="md:col-span-2">
-            <h2 className="font-cinzel text-lg font-bold text-[#f4c842] mb-4">
-              📋 Structure des blindes
-            </h2>
-            <BlindStructureEditor
-              structure={config.blindStructure}
-              onChange={bs => setConfig(c => ({ ...c, blindStructure: bs }))}
-              playerCount={validPlayers.length}
-              startingStack={config.startingStack}
-              maxPlayersPerTable={config.maxPlayersPerTable}
-              smallestChip={config.smallestChip}
-              reEntry={config.reEntry}
-            />
+            <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+              <h2 className="font-cinzel text-lg font-bold text-[#f4c842]">
+                📋 Structure des blindes
+              </h2>
+              <div className="flex items-center gap-2 ml-auto">
+                {autoCalcState === 'input' && (
+                  <>
+                    <span className="text-[#a0aec0] text-sm flex-shrink-0">Durée souhaitée</span>
+                    <input
+                      type="number"
+                      value={targetHours}
+                      onChange={e => setTargetHours(Math.max(0.5, Math.min(12, Number(e.target.value))))}
+                      min={0.5}
+                      max={12}
+                      step={0.5}
+                      className="w-20 bg-[#1a2d4a] border border-[#f4c842]/50 rounded px-2 py-1.5 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                      placeholder="3"
+                      autoFocus
+                    />
+                    <span className="text-[#a0aec0] text-sm flex-shrink-0">h</span>
+                    <button
+                      onClick={handleAutoCalcGo}
+                      className="px-3 py-1.5 rounded-lg bg-[#f4c842] text-[#0a1520] font-bold text-sm hover:bg-[#f4c842]/90 transition-colors"
+                    >
+                      Go
+                    </button>
+                    <button
+                      onClick={() => setAutoCalcState('idle')}
+                      className="text-[#4a5568] hover:text-[#e74c3c] transition-colors text-lg leading-none px-1"
+                      title="Annuler"
+                    >
+                      ✕
+                    </button>
+                  </>
+                )}
+                {autoCalcState !== 'input' && (
+                  <button
+                    onClick={() => setAutoCalcState('input')}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2a4a7a] text-[#4a8fd4] hover:border-[#f4c842] hover:text-[#f4c842] transition-colors text-sm"
+                  >
+                    ⚡ Auto-calcul
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {autoCalcState === 'loading' ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-5">
+                <div className="relative w-16 h-16">
+                  <div className="absolute inset-0 rounded-full border-4 border-[#f4c842]/15" />
+                  <div className="absolute inset-0 rounded-full border-4 border-t-[#f4c842] border-r-transparent border-b-transparent border-l-transparent animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center text-2xl text-[#f4c842]">♠</div>
+                </div>
+                <p className="text-[#4a8fd4] text-sm tracking-[0.2em] uppercase animate-pulse">
+                  Calcul en cours…
+                </p>
+              </div>
+            ) : (
+              <BlindStructureEditor
+                structure={config.blindStructure}
+                onChange={bs => setConfig(c => ({ ...c, blindStructure: bs }))}
+                playerCount={validPlayers.length}
+                startingStack={config.startingStack}
+                maxPlayersPerTable={config.maxPlayersPerTable}
+                smallestChip={config.smallestChip}
+                reEntry={config.reEntry}
+              />
+            )}
           </CRCard>
         </div>
 
