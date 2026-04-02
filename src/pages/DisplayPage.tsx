@@ -5,6 +5,11 @@ import { calculatePrizes, getPaidPlaces, positionLabel } from '../utils/prizePoo
 import { useTheme } from '../contexts/ThemeContext';
 import type { TournamentState, Player } from '../types';
 
+const ARENA_MAP = [1,2,3,4,5,5,6,6,7,7,8,8,9,10,11,12,13,14,15,15];
+function getArenaNumber(i: number) {
+  return ARENA_MAP[Math.min(i, ARENA_MAP.length - 1)];
+}
+
 export function DisplayPage() {
   const tournament = useTournamentStore(s => s.tournament);
   const { theme } = useTheme();
@@ -36,6 +41,7 @@ export function DisplayPage() {
   const paidPlaces    = getPaidPlaces(players.length, config.prizePool.itmPct);
   const levelProgress = 1 - secondsRemaining / (currentLevel.duration * 60);
   const isWarning     = secondsRemaining <= 60 && !currentLevel.isBreak;
+  const arenaNumber   = getArenaNumber(currentLevelIndex);
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
@@ -45,7 +51,7 @@ export function DisplayPage() {
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `url('/arenas/arena1.jpg')`,
+              backgroundImage: `url('/arenas/arena${arenaNumber}.jpg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
