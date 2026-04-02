@@ -60,6 +60,11 @@ export interface PrizePoolConfig {
   killSystem: KillSystemConfig;
 }
 
+export interface ReEntryConfig {
+  maxLevel: number;      // dernier niveau autorisé (1-indexed)
+  maxPerPlayer: number;  // 0 = illimité
+}
+
 export interface TournamentConfig {
   name: string;
   buyIn: number;
@@ -67,6 +72,8 @@ export interface TournamentConfig {
   maxPlayersPerTable: number;
   blindStructure: BlindLevel[];
   prizePool: PrizePoolConfig;
+  smallestChip: number;
+  reEntry: ReEntryConfig | null;
 }
 
 export interface TournamentState {
