@@ -11,7 +11,7 @@ export function CRCard({ children, className = '', gold = false, onClick }: CRCa
   return (
     <div
       className={`
-        bg-cr-card/85 backdrop-blur-sm rounded-xl p-4 cr-card-bg
+        bg-cr-card/90 backdrop-blur-sm rounded-xl p-5 cr-card-bg
         ${gold ? 'card-gold-glow' : 'border border-cr-card-border'}
         ${onClick ? 'cursor-pointer hover:brightness-110 transition-all' : ''}
         ${className}

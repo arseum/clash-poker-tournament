@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Clock, Grid, History, Palette, X } from 'lucide-react';
+import { Settings, Clock, Grid, History, Palette, X, Layers, Shield } from 'lucide-react';
 import type { Page } from '../types';
 import { useTournamentStore } from '../store/tournamentStore';
 import { useTheme, THEMES, THEME_LABELS } from '../contexts/ThemeContext';
@@ -16,9 +16,9 @@ const navItems: Array<{ page: Page; label: string; icon: React.ReactNode }> = [
   { page: 'history',    label: 'Historique', icon: <History size={20} /> },
 ];
 
-const THEME_ICONS: Record<string, string> = {
-  default:  '🃏',
-  supercell: '⚔️',
+const THEME_ICONS: Record<string, React.ReactNode> = {
+  default:   <Layers size={18} />,
+  supercell: <Shield size={18} />,
 };
 
 export function Navigation({ currentPage, onNavigate }: NavigationProps) {
@@ -107,7 +107,7 @@ export function Navigation({ currentPage, onNavigate }: NavigationProps) {
                     }
                   `}
                 >
-                  <span className="text-2xl">{THEME_ICONS[t]}</span>
+                  <span className="text-cr-blue-light">{THEME_ICONS[t]}</span>
                   <div>
                     <div className="font-cinzel font-bold text-sm">{THEME_LABELS[t]}</div>
                     <div className="text-xs opacity-70 mt-0.5">

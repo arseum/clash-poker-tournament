@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Plus, Trash2, Coffee, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, Coffee, ChevronDown, ChevronUp, AlertTriangle, BarChart2 } from 'lucide-react';
 import type { BlindLevel, ReEntryConfig } from '../types';
 import { validateBlindStructure, estimateTournament } from '../utils/tournamentEstimator';
 
@@ -88,7 +88,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-[#4a8fd4] border-b border-[#2a4a7a]">
+            <tr className="text-cr-blue-light border-b border-cr-card-border">
               <th className="text-left py-2 px-2 w-10">Niv.</th>
               <th className="text-right py-2 px-2">Grande blinde</th>
               <th className="text-right py-2 px-2">Petite blinde</th>
@@ -103,7 +103,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                 key={idx}
                 className={`border-b border-[#1a2d4a] ${level.isBreak ? 'bg-[#6b2fa0]/10' : ''}`}
               >
-                <td className="py-1.5 px-2 font-bold text-[#4a8fd4]">{level.level}</td>
+                <td className="py-1.5 px-2 font-bold text-cr-blue-light">{level.level}</td>
 
                 {level.isBreak ? (
                   <>
@@ -116,7 +116,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                         value={level.duration}
                         onChange={e => updateLevel(idx, { duration: Math.max(1, Number(e.target.value)) })}
                         min={1}
-                        className="w-16 bg-[#1a2d4a] border border-[#2a4a7a] rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-[#f4c842] ml-auto block"
+                        className="w-16 bg-cr-card border border-cr-card-border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-cr-gold ml-auto block"
                       />
                     </td>
                   </>
@@ -130,13 +130,13 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                         onChange={e => updateLevel(idx, { bigBlind: Math.max(2, Number(e.target.value)) })}
                         min={2}
                         step={50}
-                        className={`w-24 bg-[#1a2d4a] border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-[#f4c842] ml-auto block ${
-                          hasError(idx, 'bigBlind') ? 'border-orange-400' : 'border-[#2a4a7a]'
+                        className={`w-24 bg-cr-card border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-cr-gold ml-auto block ${
+                          hasError(idx, 'bigBlind') ? 'border-orange-400' : 'border-cr-card-border'
                         }`}
                       />
                     </td>
                     {/* Petite blinde (auto) */}
-                    <td className="py-1.5 px-2 text-right text-[#a0aec0]">
+                    <td className="py-1.5 px-2 text-right text-[#8888a0]">
                       <div className="flex items-center justify-end gap-1">
                         {hasError(idx, 'smallBlind') && <AlertTriangle size={12} className="text-orange-400 flex-shrink-0" />}
                         <span className={hasError(idx, 'smallBlind') ? 'text-orange-400' : ''}>
@@ -159,8 +159,8 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                             value={level.ante}
                             onChange={e => updateLevel(idx, { ante: Math.max(1, Number(e.target.value)) })}
                             min={1}
-                            className={`w-20 bg-[#1a2d4a] border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-[#f4c842] ${
-                              hasError(idx, 'ante') ? 'border-orange-400' : 'border-[#2a4a7a]'
+                            className={`w-20 bg-cr-card border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-cr-gold ${
+                              hasError(idx, 'ante') ? 'border-orange-400' : 'border-cr-card-border'
                             }`}
                           />
                         )}
@@ -173,7 +173,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                         value={level.duration}
                         onChange={e => updateLevel(idx, { duration: Math.max(1, Number(e.target.value)) })}
                         min={1}
-                        className="w-16 bg-[#1a2d4a] border border-[#2a4a7a] rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-[#f4c842] ml-auto block"
+                        className="w-16 bg-cr-card border border-cr-card-border rounded px-2 py-1 text-white text-sm text-right focus:outline-none focus:border-cr-gold ml-auto block"
                       />
                     </td>
                   </>
@@ -201,7 +201,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
       <div className="flex gap-2 mt-3">
         <button
           onClick={addLevel}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2a4a7a] text-[#4a8fd4] hover:border-[#f4c842] hover:text-[#f4c842] transition-colors text-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cr-card-border text-cr-blue-light hover:border-[#f4c842] hover:text-cr-gold transition-colors text-sm"
         >
           <Plus size={14} /> Ajouter un niveau
         </button>
@@ -215,17 +215,17 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
 
       {/* Panneau d'analyse */}
       {(estimate || validationErrors.length > 0) && (
-        <div className="mt-4 border border-[#2a4a7a] rounded-lg overflow-hidden">
+        <div className="mt-4 border border-cr-card-border rounded-lg overflow-hidden">
           <button
             onClick={() => setAnalysisOpen(o => !o)}
-            className="w-full flex items-center justify-between px-4 py-2 bg-[#0d1b2a] text-[#4a8fd4] hover:text-[#f4c842] transition-colors text-sm font-semibold"
+            className="w-full flex items-center justify-between px-4 py-2 bg-cr-darker text-cr-blue-light hover:text-cr-gold transition-colors text-sm font-semibold"
           >
-            <span>📊 Analyse du tournoi</span>
+            <span className="flex items-center gap-2"><BarChart2 size={14} /> Analyse du tournoi</span>
             {analysisOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
 
           {analysisOpen && (
-            <div className="p-4 bg-[#0a1520]">
+            <div className="p-4 bg-cr-darker">
               {/* Erreurs de validation */}
               {validationErrors.length > 0 && (
                 <div className="flex items-center gap-2 text-orange-400 text-sm mb-3 p-2 bg-orange-400/10 rounded-lg border border-orange-400/30">
@@ -240,17 +240,17 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
               {estimate && (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-center">
-                    <div className="bg-[#1a2d4a] rounded-lg p-2">
-                      <div className="text-xs text-[#a0aec0] mb-1">Durée totale</div>
-                      <div className="text-[#f4c842] font-bold text-sm">{formatDuration(estimate.totalDurationMinutes)}</div>
+                    <div className="bg-cr-card rounded-lg p-2">
+                      <div className="text-xs text-[#8888a0] mb-1">Durée totale</div>
+                      <div className="text-cr-gold font-bold text-sm">{formatDuration(estimate.totalDurationMinutes)}</div>
                     </div>
-                    <div className="bg-[#1a2d4a] rounded-lg p-2">
-                      <div className="text-xs text-[#a0aec0] mb-1">Fin estimée</div>
-                      <div className="text-[#4a8fd4] font-bold text-sm">Niv. {estimate.estimatedEndLevel + 1}</div>
+                    <div className="bg-cr-card rounded-lg p-2">
+                      <div className="text-xs text-[#8888a0] mb-1">Fin estimée</div>
+                      <div className="text-cr-blue-light font-bold text-sm">Niv. {estimate.estimatedEndLevel + 1}</div>
                     </div>
-                    <div className="bg-[#1a2d4a] rounded-lg p-2">
-                      <div className="text-xs text-[#a0aec0] mb-1">Durée estimée</div>
-                      <div className="text-[#4a8fd4] font-bold text-sm">{formatDuration(estimate.estimatedDurationMinutes)}</div>
+                    <div className="bg-cr-card rounded-lg p-2">
+                      <div className="text-xs text-[#8888a0] mb-1">Durée estimée</div>
+                      <div className="text-cr-blue-light font-bold text-sm">{formatDuration(estimate.estimatedDurationMinutes)}</div>
                     </div>
                   </div>
 
@@ -258,7 +258,7 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                   <div className="overflow-x-auto">
                     <table className="w-full text-xs">
                       <thead>
-                        <tr className="text-[#4a8fd4] border-b border-[#2a4a7a]">
+                        <tr className="text-cr-blue-light border-b border-cr-card-border">
                           <th className="text-left py-1 px-2">Niv.</th>
                           <th className="text-right py-1 px-2">Durée</th>
                           <th className="text-right py-1 px-2">Joueurs restants est.</th>
@@ -283,14 +283,14 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                           const healthWidth = Math.min(100, Math.max(5, (m / 30) * 100));
                           return (
                             <tr key={lv.levelIndex} className="border-b border-[#1a2d4a]">
-                              <td className="py-1 px-2 text-[#4a8fd4]">{lv.levelIndex + 1}</td>
-                              <td className="py-1 px-2 text-right text-[#a0aec0]">{level.duration}min</td>
+                              <td className="py-1 px-2 text-cr-blue-light">{lv.levelIndex + 1}</td>
+                              <td className="py-1 px-2 text-right text-[#8888a0]">{level.duration}min</td>
                               <td className="py-1 px-2 text-right text-white">{lv.playersRemaining}</td>
-                              <td className="py-1 px-2 text-right text-[#a0aec0]">
+                              <td className="py-1 px-2 text-right text-[#8888a0]">
                                 {m > 100 ? '>100' : m.toFixed(1)}
                               </td>
                               <td className="py-1 px-2">
-                                <div className="h-2 bg-[#1a2d4a] rounded-full overflow-hidden w-20">
+                                <div className="h-2 bg-cr-card rounded-full overflow-hidden w-20">
                                   <div
                                     className="h-full rounded-full transition-all"
                                     style={{ width: `${healthWidth}%`, backgroundColor: healthColor }}

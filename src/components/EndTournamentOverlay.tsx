@@ -10,7 +10,7 @@ interface EndTournamentOverlayProps {
   onClose: () => void;
 }
 
-const MEDAL  = ['🥇', '🥈', '🥉'];
+const MEDAL  = ['#1', '#2', '#3'];
 const COLORS = ['text-[#f4c842]', 'text-[#a0aec0]', 'text-[#cd7f32]'];
 const GLOW   = [
   'shadow-[0_0_40px_rgba(244,200,66,0.6)] border-[#f4c842]',
@@ -134,7 +134,7 @@ export function EndTournamentOverlay({ tournament, onClose }: EndTournamentOverl
               }}
               className="flex flex-col items-center"
             >
-              <div className="text-4xl mb-2">{MEDAL[rankIdx]}</div>
+              <div className={`font-cinzel font-bold text-2xl mb-2 ${COLORS[rankIdx]}`}>{MEDAL[rankIdx]}</div>
               <div
                 className={`border-2 rounded-2xl px-4 py-4 md:px-6 text-center ${GLOW[rankIdx]}`}
                 style={{

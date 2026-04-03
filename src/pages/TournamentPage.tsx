@@ -77,7 +77,7 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <CRCard>
-          <p className="text-[#a0aec0] mb-4">Aucun tournoi en cours</p>
+          <p className="text-[#8888a0] mb-4">Aucun tournoi en cours</p>
           <CRButton onClick={() => onNavigate('setup')}>Créer un tournoi</CRButton>
         </CRCard>
       </div>
@@ -105,7 +105,7 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
       {/* Title bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-        <h1 className="font-cinzel text-base sm:text-xl font-bold text-[#f4c842] truncate min-w-0">{config.name}</h1>
+        <h1 className="font-cinzel text-base sm:text-xl font-bold text-cr-gold truncate min-w-0">{config.name}</h1>
         <div className="flex gap-2 flex-shrink-0">
           <CRButton variant="ghost" size="sm" onClick={() => onNavigate('tables')}>Tables</CRButton>
           <CRButton variant="ghost" size="sm" onClick={() => onNavigate('history')} className="hidden sm:flex">Historique</CRButton>
@@ -143,28 +143,28 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
               </>
             ) : (
               <>
-                <div className="font-cinzel text-lg sm:text-2xl font-bold text-[#4a8fd4] mb-1">
+                <div className="font-cinzel text-lg sm:text-2xl font-bold text-cr-blue-light mb-1">
                   NIVEAU {currentLevel.level}
                 </div>
-                <div className={`font-cinzel font-black text-6xl sm:text-8xl md:text-9xl leading-none tracking-tight mb-3 sm:mb-4 ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-[#f4c842]'}`}>
+                <div className={`font-cinzel font-black text-6xl sm:text-8xl md:text-9xl leading-none tracking-tight mb-3 sm:mb-4 ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-cr-gold'}`}>
                   {formatTime(secondsRemaining)}
                 </div>
                 <div className="flex justify-center gap-3 sm:gap-6 text-center flex-wrap">
                   <div>
-                    <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Petite</div>
+                    <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Petite</div>
                     <div className="font-cinzel text-xl sm:text-3xl font-bold text-white">{formatChips(currentLevel.smallBlind)}</div>
                   </div>
-                  <div className="text-[#4a8fd4] text-2xl sm:text-4xl font-thin self-center">/</div>
+                  <div className="text-cr-blue-light text-2xl sm:text-4xl font-thin self-center">/</div>
                   <div>
-                    <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Grande</div>
+                    <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Grande</div>
                     <div className="font-cinzel text-xl sm:text-3xl font-bold text-white">{formatChips(currentLevel.bigBlind)}</div>
                   </div>
                   {currentLevel.ante > 0 && (
                     <>
-                      <div className="text-[#4a8fd4] text-2xl sm:text-4xl font-thin self-center">+</div>
+                      <div className="text-cr-blue-light text-2xl sm:text-4xl font-thin self-center">+</div>
                       <div>
-                        <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Ante</div>
-                        <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#f4c842]">{formatChips(currentLevel.ante)}</div>
+                        <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Ante</div>
+                        <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-gold">{formatChips(currentLevel.ante)}</div>
                       </div>
                     </>
                   )}
@@ -195,7 +195,7 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
               </CRButton>
             </div>
             {nextLevelData && (
-              <div className="mt-3 text-center text-sm text-[#a0aec0]">
+              <div className="mt-3 text-center text-sm text-[#8888a0]">
                 Prochain: {nextLevelData.isBreak ? 'PAUSE' : `${formatChips(nextLevelData.smallBlind)}/${formatChips(nextLevelData.bigBlind)}${nextLevelData.ante ? ` + ${formatChips(nextLevelData.ante)}` : ''}`} — {nextLevelData.duration}min
               </div>
             )}
@@ -204,19 +204,19 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <CRCard className="text-center">
-              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Joueurs</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#f4c842]">{activePlayers.length}</div>
-              <div className="text-[#4a5568] text-xs">/ {players.length}</div>
+              <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Joueurs</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-gold">{activePlayers.length}</div>
+              <div className="text-[#525265] text-xs">/ {players.length}</div>
             </CRCard>
             <CRCard className="text-center">
-              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Moy.</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#4a8fd4]">{formatChips(avgStack)}</div>
+              <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Moy.</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-blue-light">{formatChips(avgStack)}</div>
             </CRCard>
             <CRCard className="text-center">
-              <div className="text-[#a0aec0] text-xs uppercase tracking-widest mb-1">Pot</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-[#27ae60]">{totalPot}€</div>
+              <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Pot</div>
+              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-green">{totalPot}€</div>
               {tournament.rebuyCount > 0 && (
-                <div className="text-[#a0aec0] text-xs">+{tournament.rebuyCount} rebuy</div>
+                <div className="text-[#8888a0] text-xs">+{tournament.rebuyCount} rebuy</div>
               )}
             </CRCard>
           </div>
@@ -224,10 +224,10 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
           {/* Prize pool */}
           <CRCard>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-cinzel text-base font-bold text-[#27ae60] flex items-center gap-2">
-                <Trophy size={16} className="text-[#f4c842]" /> Prize Pool — {prizePoolAmount}€
+              <h2 className="font-cinzel text-base font-bold text-cr-green flex items-center gap-2">
+                <Trophy size={16} className="text-cr-gold" /> Prize Pool — {prizePoolAmount}€
               </h2>
-              <span className="text-[#4a5568] text-xs">ITM : {paidPlaces}/{players.length} joueurs</span>
+              <span className="text-[#525265] text-xs">ITM : {paidPlaces}/{players.length} joueurs</span>
             </div>
             <div className="flex flex-col gap-1 max-h-40 overflow-y-auto pr-1">
               {prizes.map(({ position, percentage, amount }) => (
@@ -237,22 +237,22 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
                     position === 1 ? 'bg-[#f4c842]/10 border border-[#f4c842]/30' :
                     position === 2 ? 'bg-white/5 border border-white/10' :
                     position === 3 ? 'bg-[#cd7f32]/10 border border-[#cd7f32]/20' :
-                    'bg-[#0d1b2a]'
+                    'bg-cr-darker'
                   }`}
                 >
-                  <span className={`font-cinzel font-bold w-8 ${position <= 3 ? 'text-[#f4c842]' : 'text-[#4a5568]'}`}>
+                  <span className={`font-cinzel font-bold w-8 ${position <= 3 ? 'text-cr-gold' : 'text-[#525265]'}`}>
                     {positionLabel(position)}
                   </span>
                   <div className="flex-1 mx-3">
-                    <div className="h-1.5 bg-[#0d1b2a] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-cr-darker rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full bg-[#27ae60]"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
                   </div>
-                  <span className="text-[#a0aec0] text-xs w-10 text-right">{percentage}%</span>
-                  <span className="font-cinzel font-bold text-[#27ae60] w-16 text-right">{amount}€</span>
+                  <span className="text-[#8888a0] text-xs w-10 text-right">{percentage}%</span>
+                  <span className="font-cinzel font-bold text-cr-green w-16 text-right">{amount}€</span>
                 </div>
               ))}
             </div>
@@ -261,19 +261,19 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
         {/* Players sidebar */}
         <CRCard className="max-h-72 lg:max-h-screen overflow-y-auto">
-          <h2 className="font-cinzel text-base font-bold text-[#f4c842] mb-3 flex items-center gap-2">
+          <h2 className="font-cinzel text-base font-bold text-cr-gold mb-3 flex items-center gap-2">
             <Trophy size={18} /> Joueurs actifs ({activePlayers.length})
           </h2>
           <div className="flex flex-col gap-2">
             {activePlayers.map(player => (
               <div
                 key={player.id}
-                className="flex items-stretch rounded-lg overflow-hidden border border-[#1a2d4a] hover:border-[#c0392b]/40 transition-colors"
+                className="flex items-stretch rounded-lg overflow-hidden border border-cr-card-border hover:border-[#c0392b]/40 transition-colors"
               >
-                <span className="flex-1 text-[#e8e8e8] text-sm font-medium px-3 py-2 bg-[#0d1b2a]">{player.name}</span>
+                <span className="flex-1 text-[#e8e8e8] text-sm font-medium px-3 py-2 bg-cr-darker">{player.name}</span>
                 <button
                   onClick={() => eliminatePlayer(player.id)}
-                  className="bg-[#c0392b]/20 hover:bg-[#c0392b] text-[#c0392b] hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
+                  className="bg-cr-red/15 hover:bg-cr-red text-cr-red hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
                   title="Éliminer"
                 >
                   <UserMinus size={15} />
@@ -284,19 +284,19 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
           {players.filter(p => p.isEliminated).length > 0 && (
             <>
-              <h3 className="font-cinzel text-sm font-bold text-[#4a5568] mt-4 mb-2">Éliminés</h3>
+              <h3 className="font-cinzel text-sm font-bold text-[#525265] mt-4 mb-2">Éliminés</h3>
               <div className="flex flex-col gap-1">
                 {players.filter(p => p.isEliminated)
                   .sort((a, b) => (a.position ?? 99) - (b.position ?? 99))
                   .map(player => (
-                    <div key={player.id} className="flex items-center justify-between bg-[#0d1b2a]/50 rounded-lg px-3 py-2 group">
+                    <div key={player.id} className="flex items-center justify-between bg-cr-darker/50 rounded-lg px-3 py-2 group">
                       <div className="flex items-center gap-2 min-w-0">
                         {player.position && <CRBadge variant="red">{player.position}e</CRBadge>}
-                        <span className="text-sm text-[#4a5568] line-through truncate">{player.name}</span>
+                        <span className="text-sm text-[#525265] line-through truncate">{player.name}</span>
                       </div>
                       <button
                         onClick={() => undoElimination(player.id)}
-                        className="text-[#4a5568] hover:text-[#f4c842] transition-colors opacity-0 group-hover:opacity-100 ml-2 flex-shrink-0"
+                        className="text-[#525265] hover:text-cr-gold transition-colors opacity-0 group-hover:opacity-100 ml-2 flex-shrink-0"
                         title="Annuler l'élimination"
                       >
                         <Undo2 size={14} />

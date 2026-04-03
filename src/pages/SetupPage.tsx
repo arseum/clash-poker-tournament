@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Users, ChevronRight, Trash2, UserPlus } from 'lucide-react';
+import { Plus, Users, ChevronRight, Trash2, UserPlus, Settings, ClipboardList, Zap, Spade } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRInput } from '../components/ui/CRInput';
@@ -73,9 +73,9 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <CRCard gold className="max-w-md w-full text-center">
-          <div className="text-5xl mb-4">♠</div>
-          <h2 className="font-cinzel text-2xl font-bold text-[#f4c842] mb-2">Tournoi en cours</h2>
-          <p className="text-[#a0aec0] mb-2">{tournament.config.name}</p>
+          <Spade size={48} className="text-cr-gold mx-auto mb-4" />
+          <h2 className="font-cinzel text-2xl font-bold text-cr-gold mb-2">Tournoi en cours</h2>
+          <p className="text-[#8888a0] mb-2">{tournament.config.name}</p>
           <p className="text-[#e8e8e8] mb-6">
             {tournament.players.filter(p => !p.isEliminated).length} joueurs restants —{' '}
             Niveau {tournament.currentLevelIndex + 1}
@@ -98,17 +98,17 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-black text-[#f4c842] drop-shadow-[0_0_30px_rgba(244,200,66,0.5)] mb-2">
+          <h1 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-black text-cr-gold drop-shadow-[0_0_30px_rgba(244,200,66,0.5)] mb-2">
             ♠ POKER ROYALE ♠
           </h1>
-          <p className="text-[#4a8fd4] tracking-widest text-sm uppercase">Configuration du tournoi</p>
+          <p className="text-cr-blue-light tracking-widest text-sm uppercase">Configuration du tournoi</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Config card */}
           <CRCard>
-            <h2 className="font-cinzel text-lg font-bold text-[#f4c842] mb-4 flex items-center gap-2">
-              ⚙ Configuration
+            <h2 className="font-cinzel text-lg font-bold text-cr-gold mb-4 flex items-center gap-2">
+              <Settings size={18} className="text-cr-blue-light" /> Configuration
             </h2>
             <div className="flex flex-col gap-4">
               <CRInput
@@ -150,7 +150,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                 min={1}
               />
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-[#a0aec0] font-medium">Re-entry</label>
+                <label className="text-sm text-[#8888a0] font-medium">Re-entry</label>
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
@@ -198,13 +198,13 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
           {/* Players card */}
           <CRCard>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-cinzel text-lg font-bold text-[#f4c842] flex items-center gap-2">
+              <h2 className="font-cinzel text-lg font-bold text-cr-gold flex items-center gap-2">
                 <Users size={20} /> Joueurs ({validPlayers.length})
               </h2>
               {playerNames.length > 2 && (
                 <button
                   onClick={clearPlayers}
-                  className="text-[#4a5568] hover:text-[#e74c3c] text-xs transition-colors flex items-center gap-1"
+                  className="text-[#525265] hover:text-cr-red text-xs transition-colors flex items-center gap-1"
                   title="Vider la liste"
                 >
                   <Trash2 size={13} /> Tout effacer
@@ -213,18 +213,18 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
             </div>
 
             {/* Ajout en masse */}
-            <div className="flex gap-2 items-center mb-3 p-2 bg-[#0d1b2a] rounded-lg border border-[#2a4a7a]">
-              <UserPlus size={16} className="text-[#4a8fd4] flex-shrink-0" />
-              <span className="text-[#a0aec0] text-sm flex-shrink-0">Ajouter</span>
+            <div className="flex gap-2 items-center mb-3 p-2 bg-cr-darker rounded-lg border border-cr-card-border">
+              <UserPlus size={16} className="text-cr-blue-light flex-shrink-0" />
+              <span className="text-[#8888a0] text-sm flex-shrink-0">Ajouter</span>
               <input
                 type="number"
                 value={bulkCount}
                 onChange={e => setBulkCount(Math.max(1, Math.min(50, Number(e.target.value))))}
-                className="w-14 bg-[#1a2d4a] border border-[#2a4a7a] rounded px-2 py-1 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                className="w-14 bg-cr-card border border-cr-card-border rounded px-2 py-1 text-white text-sm text-center focus:outline-none focus:border-cr-gold"
                 min={1}
                 max={50}
               />
-              <span className="text-[#a0aec0] text-sm flex-shrink-0">joueurs</span>
+              <span className="text-[#8888a0] text-sm flex-shrink-0">joueurs</span>
               <CRButton
                 variant="ghost"
                 size="sm"
@@ -237,10 +237,10 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
 
             <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '16rem' }}>
               {playerNames.map((name, idx) => (
-                <div key={idx} className="flex items-stretch rounded-lg border border-[#2a4a7a] flex-shrink-0" style={{ overflow: 'hidden', minHeight: '2.5rem' }}>
-                  <span className="text-[#4a8fd4] text-sm w-7 flex items-center justify-end pr-1.5 bg-[#0d1b2a] flex-shrink-0">{idx + 1}.</span>
+                <div key={idx} className="flex items-stretch rounded-lg border border-cr-card-border flex-shrink-0" style={{ overflow: 'hidden', minHeight: '2.5rem' }}>
+                  <span className="text-cr-blue-light text-sm w-7 flex items-center justify-end pr-1.5 bg-cr-darker flex-shrink-0">{idx + 1}.</span>
                   <input
-                    className="flex-1 bg-[#0d1b2a] px-2 py-2 text-white placeholder-[#4a5568] text-sm focus:outline-none focus:bg-[#1a2d4a] transition-colors min-w-0"
+                    className="flex-1 bg-cr-darker px-2 py-2 text-white placeholder-[#4a5568] text-sm focus:outline-none focus:bg-cr-card transition-colors min-w-0"
                     placeholder={`Joueur ${idx + 1}`}
                     value={name}
                     onChange={e => updatePlayer(idx, e.target.value)}
@@ -248,7 +248,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                   {playerNames.length > 2 && (
                     <button
                       onClick={() => removePlayer(idx)}
-                      className="bg-[#c0392b]/20 hover:bg-[#c0392b] text-[#c0392b] hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
+                      className="bg-cr-red/15 hover:bg-cr-red text-cr-red hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
                     >
                       <Trash2 size={15} />
                     </button>
@@ -279,13 +279,13 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
           {/* Blind structure editor */}
           <CRCard className="md:col-span-2">
             <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-              <h2 className="font-cinzel text-lg font-bold text-[#f4c842]">
-                📋 Structure des blindes
+              <h2 className="font-cinzel text-lg font-bold text-cr-gold flex items-center gap-2">
+                <ClipboardList size={18} className="text-cr-blue-light" /> Structure des blindes
               </h2>
               <div className="flex items-center gap-2 ml-auto flex-wrap justify-end">
                 {autoCalcState === 'input' && (
                   <>
-                    <span className="text-[#a0aec0] text-sm flex-shrink-0">Durée totale</span>
+                    <span className="text-[#8888a0] text-sm flex-shrink-0">Durée totale</span>
                     <input
                       type="number"
                       value={targetHours}
@@ -293,12 +293,12 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                       min={0.5}
                       max={12}
                       step={0.5}
-                      className="w-20 bg-[#1a2d4a] border border-[#f4c842]/50 rounded px-2 py-1.5 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                      className="w-20 bg-cr-card border border-cr-card-border rounded px-2 py-1.5 text-[#e0ddd8] text-sm text-center focus:outline-none focus:border-cr-gold focus:ring-1 focus:ring-cr-gold/20"
                       placeholder="3"
                       autoFocus
                     />
-                    <span className="text-[#a0aec0] text-sm flex-shrink-0">h</span>
-                    <span className="text-[#a0aec0] text-sm flex-shrink-0">·</span>
+                    <span className="text-[#8888a0] text-sm flex-shrink-0">h</span>
+                    <span className="text-[#8888a0] text-sm flex-shrink-0">·</span>
                     <input
                       type="number"
                       value={targetLevelMinutes}
@@ -306,19 +306,19 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                       min={5}
                       max={60}
                       step={5}
-                      className="w-20 bg-[#1a2d4a] border border-[#f4c842]/50 rounded px-2 py-1.5 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                      className="w-20 bg-cr-card border border-cr-card-border rounded px-2 py-1.5 text-[#e0ddd8] text-sm text-center focus:outline-none focus:border-cr-gold focus:ring-1 focus:ring-cr-gold/20"
                       placeholder="20"
                     />
-                    <span className="text-[#a0aec0] text-sm flex-shrink-0">min/niv.</span>
+                    <span className="text-[#8888a0] text-sm flex-shrink-0">min/niv.</span>
                     <button
                       onClick={handleAutoCalcGo}
-                      className="px-3 py-1.5 rounded-lg bg-[#f4c842] text-[#0a1520] font-bold text-sm hover:bg-[#f4c842]/90 transition-colors"
+                      className="px-3 py-1.5 rounded-lg bg-cr-gold text-cr-darker font-semibold text-sm hover:brightness-110 transition-all"
                     >
                       Go
                     </button>
                     <button
                       onClick={() => setAutoCalcState('idle')}
-                      className="text-[#4a5568] hover:text-[#e74c3c] transition-colors text-lg leading-none px-1"
+                      className="text-[#525265] hover:text-cr-red transition-colors text-lg leading-none px-1"
                       title="Annuler"
                     >
                       ✕
@@ -328,9 +328,9 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                 {autoCalcState !== 'input' && (
                   <button
                     onClick={() => setAutoCalcState('input')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#2a4a7a] text-[#4a8fd4] hover:border-[#f4c842] hover:text-[#f4c842] transition-colors text-sm"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cr-card-border text-cr-blue-light hover:border-cr-gold hover:text-cr-gold transition-colors text-sm"
                   >
-                    ⚡ Auto-calcul
+                    <Zap size={14} /> Auto-calcul
                   </button>
                 )}
               </div>
@@ -339,11 +339,11 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
             {autoCalcState === 'loading' ? (
               <div className="flex flex-col items-center justify-center py-16 gap-5">
                 <div className="relative w-16 h-16">
-                  <div className="absolute inset-0 rounded-full border-4 border-[#f4c842]/15" />
+                  <div className="absolute inset-0 rounded-full border-4 border-cr-gold/15" />
                   <div className="absolute inset-0 rounded-full border-4 border-t-[#f4c842] border-r-transparent border-b-transparent border-l-transparent animate-spin" />
-                  <div className="absolute inset-0 flex items-center justify-center text-2xl text-[#f4c842]">♠</div>
+                  <div className="absolute inset-0 flex items-center justify-center"><Spade size={20} className="text-cr-gold" /></div>
                 </div>
-                <p className="text-[#4a8fd4] text-sm tracking-[0.2em] uppercase animate-pulse">
+                <p className="text-cr-blue-light text-sm tracking-[0.2em] uppercase animate-pulse">
                   Calcul en cours…
                 </p>
               </div>

@@ -1,4 +1,4 @@
-import { ArrowLeftRight, Users } from 'lucide-react';
+import { ArrowLeftRight, Users, AlertTriangle } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRBadge } from '../components/ui/CRBadge';
@@ -33,8 +33,8 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
           <div>
-            <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-[#f4c842]">Tables</h1>
-            <p className="text-[#4a8fd4] text-sm mt-1">
+            <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-cr-gold">Tables</h1>
+            <p className="text-cr-blue-light text-sm mt-1">
               {activePlayers.length} joueurs — {tables.length} tables
             </p>
           </div>
@@ -68,7 +68,7 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
             return (
               <CRCard key={table.id} gold={tablePlayers.length <= 3}>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-cinzel font-bold text-[#f4c842] text-lg">{table.name}</h3>
+                  <h3 className="font-cinzel font-bold text-cr-gold text-lg">{table.name}</h3>
                   <CRBadge variant={isFull ? 'red' : tablePlayers.length <= 4 ? 'gold' : 'green'}>
                     <Users size={12} className="mr-1" />
                     {tablePlayers.length}/{idealPerTable}
@@ -92,8 +92,8 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
                 </div>
 
                 {tablePlayers.length <= 3 && (
-                  <div className="text-center text-xs text-[#f4c842]/70 font-cinzel tracking-wide">
-                    ⚠ Table courte — redistribution conseillée
+                  <div className="flex items-center justify-center gap-1.5 text-xs text-cr-gold/70 font-cinzel tracking-wide">
+                    <AlertTriangle size={11} /> Table courte — redistribution conseillée
                   </div>
                 )}
               </CRCard>
@@ -104,14 +104,14 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
         {/* Eliminated players section */}
         {players.filter(p => p.isEliminated).length > 0 && (
           <div className="mt-6">
-            <h2 className="font-cinzel text-lg font-bold text-[#4a5568] mb-3">Joueurs éliminés</h2>
+            <h2 className="font-cinzel text-lg font-bold text-[#525265] mb-3">Joueurs éliminés</h2>
             <div className="flex flex-wrap gap-2">
               {players
                 .filter(p => p.isEliminated)
                 .sort((a, b) => (a.position ?? 99) - (b.position ?? 99))
                 .map(player => (
                   <div key={player.id} className="bg-[#1a2d4a]/50 border border-[#2a4a7a]/30 rounded-lg px-3 py-1.5 flex items-center gap-2">
-                    <span className="text-sm text-[#4a5568] line-through">{player.name}</span>
+                    <span className="text-sm text-[#525265] line-through">{player.name}</span>
                     {player.position && <CRBadge variant="red">{player.position}e</CRBadge>}
                   </div>
                 ))}
