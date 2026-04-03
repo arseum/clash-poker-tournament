@@ -35,12 +35,13 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
   // Auto-calcul : 'idle' | 'input' | 'loading'
   const [autoCalcState, setAutoCalcState] = useState<'idle' | 'input' | 'loading'>('idle');
   const [targetHours, setTargetHours] = useState(3);
+  const [targetLevelMinutes, setTargetLevelMinutes] = useState(20);
 
   const handleAutoCalcGo = () => {
     setAutoCalcState('loading');
     const targetMinutes = Math.round(targetHours * 60);
     setTimeout(() => {
-      setConfig(c => ({ ...c, blindStructure: generateBlindStructure(c.startingStack, c.smallestChip, targetMinutes) }));
+      setConfig(c => ({ ...c, blindStructure: generateBlindStructure(c.startingStack, c.smallestChip, targetMinutes, targetLevelMinutes) }));
       setAutoCalcState('idle');
     }, 1200);
   };
@@ -284,7 +285,7 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
               <div className="flex items-center gap-2 ml-auto flex-wrap justify-end">
                 {autoCalcState === 'input' && (
                   <>
-                    <span className="text-[#a0aec0] text-sm flex-shrink-0">Durée souhaitée</span>
+                    <span className="text-[#a0aec0] text-sm flex-shrink-0">Durée totale</span>
                     <input
                       type="number"
                       value={targetHours}
@@ -297,6 +298,18 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                       autoFocus
                     />
                     <span className="text-[#a0aec0] text-sm flex-shrink-0">h</span>
+                    <span className="text-[#a0aec0] text-sm flex-shrink-0">·</span>
+                    <input
+                      type="number"
+                      value={targetLevelMinutes}
+                      onChange={e => setTargetLevelMinutes(Math.max(5, Math.min(60, Number(e.target.value))))}
+                      min={5}
+                      max={60}
+                      step={5}
+                      className="w-20 bg-[#1a2d4a] border border-[#f4c842]/50 rounded px-2 py-1.5 text-white text-sm text-center focus:outline-none focus:border-[#f4c842]"
+                      placeholder="20"
+                    />
+                    <span className="text-[#a0aec0] text-sm flex-shrink-0">min/niv.</span>
                     <button
                       onClick={handleAutoCalcGo}
                       className="px-3 py-1.5 rounded-lg bg-[#f4c842] text-[#0a1520] font-bold text-sm hover:bg-[#f4c842]/90 transition-colors"
