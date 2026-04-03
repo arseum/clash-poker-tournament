@@ -35,7 +35,6 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
   const [showEnd, setShowEnd] = useState(false);
 
-  // Detect end of tournament (1 player left)
   const activePlayers = tournament?.players.filter(p => !p.isEliminated) ?? [];
   const totalPlayers = tournament?.players.length ?? 0;
   useEffect(() => {
@@ -44,7 +43,6 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
       setShowEnd(true);
     }
   }, [activePlayers.length, totalPlayers, showEnd]); // eslint-disable-line react-hooks/exhaustive-deps
-
 
   const handleCloseEnd = () => {
     if (!tournament) return;
@@ -98,7 +96,6 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
   return (
     <div className="min-h-screen p-4 relative">
-      {/* End overlay */}
       {showEnd && (
         <EndTournamentOverlay tournament={tournament} onClose={handleCloseEnd} />
       )}
@@ -123,13 +120,15 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
       {/* Main grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-        {/* Timer + Blinds */}
+        {/* Timer + Controls + Stats — colonne principale */}
         <div className="lg:col-span-2 flex flex-col gap-4">
 
+          {/* Timer (avec controls intégrés) */}
           <CRCard gold className="text-center relative overflow-hidden">
-            <div className="absolute bottom-0 left-0 h-1 bg-[#f4c842]/20 w-full">
+            {/* Barre de progression */}
+            <div className="absolute bottom-0 left-0 h-0.5 bg-cr-card-border w-full">
               <div
-                className="h-full bg-[#f4c842] transition-all duration-1000"
+                className="h-full bg-cr-gold transition-all duration-1000"
                 style={{ width: `${levelProgress * 100}%` }}
               />
             </div>
@@ -171,11 +170,9 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
                 </div>
               </>
             )}
-          </CRCard>
 
-          {/* Controls */}
-          <CRCard>
-            <div className="flex flex-wrap justify-center gap-3">
+            {/* Controls — fusionnés dans le timer */}
+            <div className="border-t border-cr-card-border/40 mt-5 pt-4 flex flex-wrap justify-center gap-3">
               <CRButton variant="ghost" size="sm" onClick={prevLevel}>
                 <SkipBack size={18} />
               </CRButton>
@@ -195,64 +192,59 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
               </CRButton>
             </div>
             {nextLevelData && (
-              <div className="mt-3 text-center text-sm text-[#8888a0]">
-                Prochain: {nextLevelData.isBreak ? 'PAUSE' : `${formatChips(nextLevelData.smallBlind)}/${formatChips(nextLevelData.bigBlind)}${nextLevelData.ante ? ` + ${formatChips(nextLevelData.ante)}` : ''}`} — {nextLevelData.duration}min
+              <div className="mt-3 text-center text-sm text-[#525265] pb-1">
+                Prochain : {nextLevelData.isBreak ? 'PAUSE' : `${formatChips(nextLevelData.smallBlind)}/${formatChips(nextLevelData.bigBlind)}${nextLevelData.ante ? ` + ${formatChips(nextLevelData.ante)}` : ''}`} — {nextLevelData.duration}min
               </div>
             )}
           </CRCard>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            <CRCard className="text-center">
+          {/* Stats — ligne plate sans cards individuelles */}
+          <div className="grid grid-cols-3 border border-cr-card-border rounded-xl overflow-hidden bg-cr-card/90">
+            <div className="text-center px-4 py-4 border-r border-cr-card-border">
               <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Joueurs</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-gold">{activePlayers.length}</div>
+              <div className="font-cinzel text-2xl sm:text-3xl font-bold text-cr-gold">{activePlayers.length}</div>
               <div className="text-[#525265] text-xs">/ {players.length}</div>
-            </CRCard>
-            <CRCard className="text-center">
+            </div>
+            <div className="text-center px-4 py-4 border-r border-cr-card-border">
               <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Moy.</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-blue-light">{formatChips(avgStack)}</div>
-            </CRCard>
-            <CRCard className="text-center">
+              <div className="font-cinzel text-2xl sm:text-3xl font-bold text-cr-blue-light">{formatChips(avgStack)}</div>
+            </div>
+            <div className="text-center px-4 py-4">
               <div className="text-[#8888a0] text-xs uppercase tracking-widest mb-1">Pot</div>
-              <div className="font-cinzel text-xl sm:text-3xl font-bold text-cr-green">{totalPot}€</div>
+              <div className="font-cinzel text-2xl sm:text-3xl font-bold text-cr-green">{totalPot}€</div>
               {tournament.rebuyCount > 0 && (
                 <div className="text-[#8888a0] text-xs">+{tournament.rebuyCount} rebuy</div>
               )}
-            </CRCard>
+            </div>
           </div>
 
           {/* Prize pool */}
           <CRCard>
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="font-cinzel text-base font-bold text-cr-green flex items-center gap-2">
                 <Trophy size={16} className="text-cr-gold" /> Prize Pool — {prizePoolAmount}€
               </h2>
               <span className="text-[#525265] text-xs">ITM : {paidPlaces}/{players.length} joueurs</span>
             </div>
-            <div className="flex flex-col gap-1 max-h-40 overflow-y-auto pr-1">
+            <div className="flex flex-col max-h-44 overflow-y-auto">
               {prizes.map(({ position, percentage, amount }) => (
                 <div
                   key={position}
-                  className={`flex items-center justify-between rounded px-3 py-1.5 text-sm ${
-                    position === 1 ? 'bg-[#f4c842]/10 border border-[#f4c842]/30' :
-                    position === 2 ? 'bg-white/5 border border-white/10' :
-                    position === 3 ? 'bg-[#cd7f32]/10 border border-[#cd7f32]/20' :
-                    'bg-cr-darker'
-                  }`}
+                  className="flex items-center justify-between py-2 border-b border-cr-card-border/40 last:border-0 text-sm"
                 >
-                  <span className={`font-cinzel font-bold w-8 ${position <= 3 ? 'text-cr-gold' : 'text-[#525265]'}`}>
+                  <span className={`font-cinzel font-bold w-8 flex-shrink-0 ${position <= 3 ? 'text-cr-gold' : 'text-[#525265]'}`}>
                     {positionLabel(position)}
                   </span>
                   <div className="flex-1 mx-3">
-                    <div className="h-1.5 bg-cr-darker rounded-full overflow-hidden">
+                    <div className="h-1 bg-cr-darker rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-[#27ae60]"
+                        className="h-full rounded-full bg-cr-green"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
                   </div>
                   <span className="text-[#8888a0] text-xs w-10 text-right">{percentage}%</span>
-                  <span className="font-cinzel font-bold text-cr-green w-16 text-right">{amount}€</span>
+                  <span className="font-cinzel font-bold text-cr-green w-14 text-right">{amount}€</span>
                 </div>
               ))}
             </div>
@@ -261,19 +253,19 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
         {/* Players sidebar */}
         <CRCard className="max-h-72 lg:max-h-screen overflow-y-auto">
-          <h2 className="font-cinzel text-base font-bold text-cr-gold mb-3 flex items-center gap-2">
+          <h2 className="font-cinzel text-base font-bold text-cr-gold mb-4 flex items-center gap-2">
             <Trophy size={18} /> Joueurs actifs ({activePlayers.length})
           </h2>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
             {activePlayers.map(player => (
               <div
                 key={player.id}
-                className="flex items-stretch rounded-lg overflow-hidden border border-cr-card-border hover:border-[#c0392b]/40 transition-colors"
+                className="flex items-center justify-between py-2.5 border-b border-cr-card-border/30 last:border-0"
               >
-                <span className="flex-1 text-[#e8e8e8] text-sm font-medium px-3 py-2 bg-cr-darker">{player.name}</span>
+                <span className="text-[#e8e8e8] text-sm">{player.name}</span>
                 <button
                   onClick={() => eliminatePlayer(player.id)}
-                  className="bg-cr-red/15 hover:bg-cr-red text-cr-red hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
+                  className="text-[#525265] hover:text-white hover:bg-cr-red transition-colors flex-shrink-0 ml-2 p-1.5 rounded-lg"
                   title="Éliminer"
                 >
                   <UserMinus size={15} />
@@ -284,12 +276,12 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
           {players.filter(p => p.isEliminated).length > 0 && (
             <>
-              <h3 className="font-cinzel text-sm font-bold text-[#525265] mt-4 mb-2">Éliminés</h3>
-              <div className="flex flex-col gap-1">
+              <h3 className="font-cinzel text-xs font-bold text-[#525265] uppercase tracking-widest mt-5 mb-3">Éliminés</h3>
+              <div className="flex flex-col">
                 {players.filter(p => p.isEliminated)
                   .sort((a, b) => (a.position ?? 99) - (b.position ?? 99))
                   .map(player => (
-                    <div key={player.id} className="flex items-center justify-between bg-cr-darker/50 rounded-lg px-3 py-2 group">
+                    <div key={player.id} className="flex items-center justify-between py-2 border-b border-cr-card-border/20 last:border-0 group">
                       <div className="flex items-center gap-2 min-w-0">
                         {player.position && <CRBadge variant="red">{player.position}e</CRBadge>}
                         <span className="text-sm text-[#525265] line-through truncate">{player.name}</span>

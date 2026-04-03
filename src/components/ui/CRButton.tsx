@@ -11,11 +11,11 @@ interface CRButtonProps {
 }
 
 const variants = {
-  gold:  'bg-cr-gold text-cr-darker hover:brightness-110 active:brightness-95 font-semibold border border-cr-gold',
-  blue:  'bg-cr-blue-mid text-white hover:brightness-110 active:brightness-95 font-semibold border border-cr-blue-mid',
-  red:   'bg-cr-red text-white hover:brightness-110 active:brightness-95 font-semibold border border-cr-red',
-  green: 'bg-cr-green text-white hover:brightness-110 active:brightness-95 font-semibold border border-cr-green',
-  ghost: 'bg-transparent text-[#c8c4be] hover:bg-cr-card/80 border border-cr-card-border',
+  gold:  'bg-cr-gold text-cr-darker hover:brightness-[1.18] hover:shadow-[0_0_16px_rgba(200,168,106,0.4)] active:brightness-90 font-semibold border border-cr-gold/70',
+  blue:  'bg-cr-blue-mid text-white hover:brightness-[1.25] hover:shadow-[0_0_12px_rgba(42,80,112,0.5)] active:brightness-90 font-semibold border border-cr-blue-mid/70',
+  red:   'bg-cr-red text-white hover:brightness-[1.25] hover:shadow-[0_0_12px_rgba(146,72,72,0.5)] active:brightness-90 font-semibold border border-cr-red/70',
+  green: 'bg-cr-green text-white hover:brightness-[1.25] hover:shadow-[0_0_12px_rgba(72,138,98,0.5)] active:brightness-90 font-semibold border border-cr-green/70',
+  ghost: 'bg-transparent text-[#9090a8] hover:bg-cr-card hover:text-[#e0ddd8] hover:border-cr-blue-light/50 active:brightness-90 border border-cr-card-border',
 };
 
 const sizes = {
@@ -42,7 +42,7 @@ export function CRButton({
       className={`
         ${variants[variant]} ${sizes[size]}
         transition-all duration-150
-        disabled:opacity-40 disabled:cursor-not-allowed
+        disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none
         font-cinzel tracking-wide select-none
         ${className}
       `}

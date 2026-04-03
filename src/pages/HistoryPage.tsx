@@ -1,4 +1,4 @@
-import { Trash2, Trophy, TrendingUp, Clock, Users } from 'lucide-react';
+import { Trash2, Trophy } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRBadge } from '../components/ui/CRBadge';
@@ -62,25 +62,21 @@ export function HistoryPage({ onNavigate }: HistoryPageProps) {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                  <div className="text-center">
-                    <Users size={16} className="mx-auto text-cr-blue-light mb-1" />
-                    <div className="font-cinzel font-bold text-xl text-white">{entry.playerCount}</div>
+                <div className="grid grid-cols-4 divide-x divide-cr-card-border/40 mt-4 border-t border-cr-card-border/40 pt-4">
+                  <div className="text-center px-2">
+                    <div className="font-cinzel font-bold text-lg text-white">{entry.playerCount}</div>
                     <div className="text-[#525265] text-xs">joueurs</div>
                   </div>
-                  <div className="text-center">
-                    <Clock size={16} className="mx-auto text-cr-blue-light mb-1" />
-                    <div className="font-cinzel font-bold text-xl text-white">{entry.duration}min</div>
+                  <div className="text-center px-2">
+                    <div className="font-cinzel font-bold text-lg text-white">{entry.duration}min</div>
                     <div className="text-[#525265] text-xs">durée</div>
                   </div>
-                  <div className="text-center">
-                    <Trophy size={16} className="mx-auto text-cr-gold mb-1" />
-                    <div className="font-cinzel font-bold text-xl text-cr-gold">{entry.totalPot}€</div>
+                  <div className="text-center px-2">
+                    <div className="font-cinzel font-bold text-lg text-cr-gold">{entry.totalPot}€</div>
                     <div className="text-[#525265] text-xs">pot</div>
                   </div>
-                  <div className="text-center">
-                    <TrendingUp size={16} className="mx-auto text-cr-green mb-1" />
-                    <div className="font-cinzel font-bold text-xl text-cr-green">{entry.buyIn}€</div>
+                  <div className="text-center px-2">
+                    <div className="font-cinzel font-bold text-lg text-cr-green">{entry.buyIn}€</div>
                     <div className="text-[#525265] text-xs">buy-in</div>
                   </div>
                 </div>

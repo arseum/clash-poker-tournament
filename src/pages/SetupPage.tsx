@@ -212,15 +212,15 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
               )}
             </div>
 
-            {/* Ajout en masse */}
-            <div className="flex gap-2 items-center mb-3 p-2 bg-cr-darker rounded-lg border border-cr-card-border">
-              <UserPlus size={16} className="text-cr-blue-light flex-shrink-0" />
+            {/* Ajout en masse — inline, sans boîte */}
+            <div className="flex gap-2 items-center mb-1 pb-3 border-b border-cr-card-border/50">
+              <UserPlus size={15} className="text-cr-blue-light flex-shrink-0" />
               <span className="text-[#8888a0] text-sm flex-shrink-0">Ajouter</span>
               <input
                 type="number"
                 value={bulkCount}
                 onChange={e => setBulkCount(Math.max(1, Math.min(50, Number(e.target.value))))}
-                className="w-14 bg-cr-card border border-cr-card-border rounded px-2 py-1 text-white text-sm text-center focus:outline-none focus:border-cr-gold"
+                className="w-14 bg-cr-darker border border-cr-card-border rounded px-2 py-1 text-white text-sm text-center focus:outline-none focus:border-cr-gold"
                 min={1}
                 max={50}
               />
@@ -235,12 +235,13 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
               </CRButton>
             </div>
 
-            <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '16rem' }}>
+            {/* Liste joueurs — rows plates */}
+            <div className="flex flex-col overflow-y-auto" style={{ maxHeight: '16rem' }}>
               {playerNames.map((name, idx) => (
-                <div key={idx} className="flex items-stretch rounded-lg border border-cr-card-border flex-shrink-0" style={{ overflow: 'hidden', minHeight: '2.5rem' }}>
-                  <span className="text-cr-blue-light text-sm w-7 flex items-center justify-end pr-1.5 bg-cr-darker flex-shrink-0">{idx + 1}.</span>
+                <div key={idx} className="flex items-center border-b border-cr-card-border/30 last:border-0 flex-shrink-0" style={{ minHeight: '2.5rem' }}>
+                  <span className="text-[#525265] text-xs w-6 text-right pr-2 flex-shrink-0">{idx + 1}</span>
                   <input
-                    className="flex-1 bg-cr-darker px-2 py-2 text-white placeholder-[#4a5568] text-sm focus:outline-none focus:bg-cr-card transition-colors min-w-0"
+                    className="flex-1 bg-transparent py-2 text-[#e8e8e8] placeholder-[#4a5568] text-sm focus:outline-none min-w-0"
                     placeholder={`Joueur ${idx + 1}`}
                     value={name}
                     onChange={e => updatePlayer(idx, e.target.value)}
@@ -248,9 +249,9 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
                   {playerNames.length > 2 && (
                     <button
                       onClick={() => removePlayer(idx)}
-                      className="bg-cr-red/15 hover:bg-cr-red text-cr-red hover:text-white transition-colors px-3 flex items-center flex-shrink-0"
+                      className="text-[#525265] hover:text-cr-red transition-colors px-2 flex items-center flex-shrink-0"
                     >
-                      <Trash2 size={15} />
+                      <Trash2 size={13} />
                     </button>
                   )}
                 </div>

@@ -236,20 +236,20 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                 </div>
               )}
 
-              {/* Stats globales */}
+              {/* Stats globales — inline, sans boxes */}
               {estimate && (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-center">
-                    <div className="bg-cr-card rounded-lg p-2">
-                      <div className="text-xs text-[#8888a0] mb-1">Durée totale</div>
+                  <div className="flex flex-wrap gap-6 mb-4 pb-3 border-b border-cr-card-border/40">
+                    <div>
+                      <div className="text-xs text-[#8888a0] mb-0.5">Durée totale</div>
                       <div className="text-cr-gold font-bold text-sm">{formatDuration(estimate.totalDurationMinutes)}</div>
                     </div>
-                    <div className="bg-cr-card rounded-lg p-2">
-                      <div className="text-xs text-[#8888a0] mb-1">Fin estimée</div>
+                    <div>
+                      <div className="text-xs text-[#8888a0] mb-0.5">Fin estimée</div>
                       <div className="text-cr-blue-light font-bold text-sm">Niv. {estimate.estimatedEndLevel + 1}</div>
                     </div>
-                    <div className="bg-cr-card rounded-lg p-2">
-                      <div className="text-xs text-[#8888a0] mb-1">Durée estimée</div>
+                    <div>
+                      <div className="text-xs text-[#8888a0] mb-0.5">Durée estimée</div>
                       <div className="text-cr-blue-light font-bold text-sm">{formatDuration(estimate.estimatedDurationMinutes)}</div>
                     </div>
                   </div>
