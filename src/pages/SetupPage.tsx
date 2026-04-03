@@ -98,9 +98,13 @@ export function SetupPage({ onNavigate }: SetupPageProps) {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-black text-cr-gold drop-shadow-[0_0_30px_rgba(244,200,66,0.5)] mb-2">
-            ♠ POKER ROYALE ♠
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <span className="cr-supercell-only"><img src="/clash_royal_todo/tournament_icon.webp" alt="" className="w-14 h-14 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" /></span>
+            <h1 className="font-cinzel text-2xl sm:text-4xl md:text-5xl font-black text-cr-gold drop-shadow-[0_0_30px_rgba(244,200,66,0.5)]">
+              ♠ POKER ROYALE ♠
+            </h1>
+            <span className="cr-supercell-only"><img src="/clash_royal_todo/tournament_icon.webp" alt="" className="w-14 h-14 object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] scale-x-[-1]" /></span>
+          </div>
           <p className="text-cr-blue-light tracking-widest text-sm uppercase">Configuration du tournoi</p>
         </div>
 

@@ -37,7 +37,10 @@ export function HistoryPage({ onNavigate }: HistoryPageProps) {
 
         {entries.length === 0 ? (
           <CRCard className="text-center py-16">
-            <Trophy size={48} className="text-[#2a4a7a] mx-auto mb-4" />
+            <div className="mx-auto mb-4 flex justify-center">
+              <img src="/clash_royal_todo/coffre.png" alt="" className="cr-supercell-only w-24 h-20 object-contain opacity-60" />
+              <Trophy size={48} className="cr-default-only text-[#2a4a7a]" />
+            </div>
             <p className="text-[#525265] font-cinzel text-xl">Aucun tournoi terminé</p>
             <p className="text-[#2a4a7a] text-sm mt-2">Les résultats apparaîtront ici</p>
           </CRCard>

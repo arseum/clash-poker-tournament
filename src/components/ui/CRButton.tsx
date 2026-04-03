@@ -36,10 +36,12 @@ export function CRButton({
   return (
     <button
       type={type}
+      data-variant={variant}
       onClick={onClick}
       disabled={disabled}
       style={{ borderRadius: 'var(--theme-btn-radius, 0.5rem)' }}
       className={`
+        cr-btn
         ${variants[variant]} ${sizes[size]}
         transition-all duration-150
         disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none

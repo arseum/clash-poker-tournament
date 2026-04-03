@@ -126,9 +126,9 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
           {/* Timer (avec controls intégrés) */}
           <CRCard gold className="text-center relative overflow-hidden">
             {/* Barre de progression */}
-            <div className="absolute bottom-0 left-0 h-0.5 bg-cr-card-border w-full">
+            <div className="absolute bottom-0 left-0 w-full cr-timer-bar-track">
               <div
-                className="h-full bg-cr-gold transition-all duration-1000"
+                className={`cr-timer-bar-fill${isWarning ? ' cr-timer-bar-warning' : ''}`}
                 style={{ width: `${levelProgress * 100}%` }}
               />
             </div>
@@ -142,8 +142,8 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
               </>
             ) : (
               <>
-                <div className="font-cinzel text-lg sm:text-2xl font-bold text-cr-blue-light mb-1">
-                  NIVEAU {currentLevel.level}
+                <div className="cr-level-ribbon font-cinzel text-lg sm:text-2xl font-bold text-cr-blue-light mb-1">
+                  <span>NIVEAU {currentLevel.level}</span>
                 </div>
                 <div className={`font-cinzel font-black text-6xl sm:text-8xl md:text-9xl leading-none tracking-tight mb-3 sm:mb-4 ${isWarning ? 'text-[#e74c3c] animate-pulse' : 'text-cr-gold'}`}>
                   {formatTime(secondsRemaining)}
@@ -254,7 +254,9 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
         {/* Players sidebar */}
         <CRCard className="max-h-72 lg:max-h-screen overflow-y-auto">
           <h2 className="font-cinzel text-base font-bold text-cr-gold mb-4 flex items-center gap-2">
-            <Trophy size={18} /> Joueurs actifs ({activePlayers.length})
+            <span className="cr-supercell-only !block"><img src="/clash_royal_todo/crown-blue.png" alt="" className="w-6 h-6 object-contain" /></span>
+            <span className="cr-default-only !block"><Trophy size={18} /></span>
+            Joueurs actifs ({activePlayers.length})
           </h2>
           <div className="flex flex-col">
             {activePlayers.map(player => (
