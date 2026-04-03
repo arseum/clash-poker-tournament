@@ -4,21 +4,25 @@ import type { BlindLevel, ReEntryConfig } from '../types';
  * Génère une structure de blindes automatique.
  * - BB de départ ≈ 1% du stack, arrondi au plus petit jeton
  * - Progression x1.5 par niveau, arrondie au plus petit jeton
- * - 12 niveaux de jeu + 2 pauses de 15 min (après niveaux 4 et 8)
- * - Durée par niveau = (targetDurationMinutes - 30 min de pauses) / 12
+ * - Pauses de 15 min insérées après chaque tranche de 4 niveaux de jeu
  * - Antes à partir du niveau 7 (≈ 10% de la BB)
+ *
+ * @param levelDurationMinutes  Durée souhaitée par niveau (défaut 20 min)
  */
 export function generateBlindStructure(
   startingStack: number,
   smallestChip: number,
-  targetDurationMinutes = 180
+  targetDurationMinutes = 180,
+  levelDurationMinutes = 20
 ): BlindLevel[] {
   const chip = Math.max(1, smallestChip);
   const roundTo = (n: number) => Math.max(chip, Math.round(n / chip) * chip);
+  const lvDur = Math.max(5, Math.round(levelDurationMinutes));
 
-  const GAME_LEVELS = 12;
-  const BREAK_TIME = 2 * 15; // 2 pauses de 15 min
-  const levelDuration = Math.max(5, Math.round((targetDurationMinutes - BREAK_TIME) / GAME_LEVELS));
+  // Calcul du nombre de niveaux de jeu (une itération pour tenir compte des pauses)
+  const approxLevels = Math.round(targetDurationMinutes / lvDur);
+  const nbBreaks = Math.floor(approxLevels / 4);
+  const GAME_LEVELS = Math.min(24, Math.max(4, Math.round((targetDurationMinutes - nbBreaks * 15) / lvDur)));
 
   const startBB = roundTo(startingStack * 0.01);
   const result: BlindLevel[] = [];
@@ -34,11 +38,11 @@ export function generateBlindStructure(
       smallBlind: sb,
       bigBlind: bb,
       ante,
-      duration: levelDuration,
+      duration: lvDur,
     });
     gameLevel++;
 
-    if (gameLevel === 4 || gameLevel === 8) {
+    if (gameLevel % 4 === 0 && gameLevel < GAME_LEVELS) {
       result.push({
         level: result.length + 1,
         smallBlind: 0,
