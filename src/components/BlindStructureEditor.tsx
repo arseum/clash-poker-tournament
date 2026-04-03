@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Plus, Trash2, Coffee, ChevronDown, ChevronUp, AlertTriangle, BarChart2 } from 'lucide-react';
 import type { BlindLevel, ReEntryConfig } from '../types';
+import { CRButton } from './ui/CRButton';
 import { validateBlindStructure, estimateTournament } from '../utils/tournamentEstimator';
 
 interface Props {
@@ -184,7 +185,8 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
                   {structure.length > 1 && (
                     <button
                       onClick={() => removeLevel(idx)}
-                      className="text-[#4a5568] hover:text-[#e74c3c] transition-colors p-1"
+                      data-variant="red"
+                      className="cr-btn text-[#4a5568] hover:text-[#e74c3c] transition-colors p-1"
                       title="Supprimer ce niveau"
                     >
                       <Trash2 size={14} />
@@ -199,18 +201,12 @@ export function BlindStructureEditor({ structure, onChange, playerCount, startin
 
       {/* Add buttons */}
       <div className="flex gap-2 mt-3">
-        <button
-          onClick={addLevel}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cr-card-border text-cr-blue-light hover:border-[#f4c842] hover:text-cr-gold transition-colors text-sm"
-        >
+        <CRButton variant="blue" size="sm" onClick={addLevel} className="flex items-center gap-1.5">
           <Plus size={14} /> Ajouter un niveau
-        </button>
-        <button
-          onClick={addBreak}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#6b2fa0]/50 text-[#9b59b6] hover:border-[#9b59b6] hover:text-[#c084fc] transition-colors text-sm"
-        >
+        </CRButton>
+        <CRButton variant="ghost" size="sm" onClick={addBreak} className="flex items-center gap-1.5">
           <Coffee size={14} /> Ajouter une pause
-        </button>
+        </CRButton>
       </div>
 
       {/* Panneau d'analyse */}

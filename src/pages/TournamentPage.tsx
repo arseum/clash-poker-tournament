@@ -267,7 +267,8 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
                 <span className="text-[#e8e8e8] text-sm">{player.name}</span>
                 <button
                   onClick={() => eliminatePlayer(player.id)}
-                  className="text-[#525265] hover:text-white hover:bg-cr-red transition-colors flex-shrink-0 ml-2 p-1.5 rounded-lg"
+                  data-variant="red"
+                  className="cr-btn text-[#525265] hover:text-white hover:bg-cr-red transition-colors flex-shrink-0 ml-2 p-1.5 rounded-lg"
                   title="Éliminer"
                 >
                   <UserMinus size={15} />
@@ -290,7 +291,8 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
                       </div>
                       <button
                         onClick={() => undoElimination(player.id)}
-                        className="text-[#525265] hover:text-cr-gold transition-colors opacity-0 group-hover:opacity-100 ml-2 flex-shrink-0"
+                        data-variant="ghost"
+                        className="cr-btn text-[#525265] hover:text-cr-gold transition-colors opacity-0 group-hover:opacity-100 ml-2 flex-shrink-0 p-1"
                         title="Annuler l'élimination"
                       >
                         <Undo2 size={14} />

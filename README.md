@@ -12,3 +12,7 @@ Currently, two official plugins are available:
 ```bash
 npm run dev
 ```
+
+## todo
+
+mettre PWA pour que l'app ne passe pu par web

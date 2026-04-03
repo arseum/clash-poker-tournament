@@ -238,20 +238,26 @@ export function PrizePoolSetupCard({ buyIn, playerCount, prizePool, onChange }: 
           )}
         </div>
 
-        <div className="flex gap-1 mb-4 rounded-lg overflow-hidden border border-cr-card-border">
-          {(['auto', 'paliers', 'manual'] as const).map(mode => (
-            <button
-              key={mode}
-              onClick={() => setMode(mode)}
-              className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                distributionMode === mode
-                  ? 'bg-[#f4c842] text-cr-darker font-bold'
-                  : 'bg-cr-darker text-[#8888a0] hover:text-white hover:bg-[#1a3a6b]/50'
-              }`}
-            >
-              {mode === 'auto' ? 'Auto' : mode === 'paliers' ? 'Paliers' : 'Manuel'}
-            </button>
-          ))}
+        <div className="flex gap-2 mb-4">
+          {(['auto', 'paliers', 'manual'] as const).map(mode => {
+            const selected = distributionMode === mode;
+            return (
+              <button
+                key={mode}
+                onClick={() => setMode(mode)}
+                data-variant={selected ? 'gold' : 'blue'}
+                data-selected={selected ? 'true' : undefined}
+                style={{ borderRadius: 'var(--theme-btn-radius, 0.5rem)' }}
+                className={`cr-btn cr-mode-btn flex-1 py-2.5 font-cinzel text-sm font-bold tracking-wide transition-all duration-150 select-none ${
+                  selected
+                    ? 'bg-cr-gold text-cr-darker border border-cr-gold/70'
+                    : 'bg-cr-blue-mid text-white border border-cr-blue-mid/70'
+                }`}
+              >
+                {mode === 'auto' ? 'Auto' : mode === 'paliers' ? 'Paliers' : 'Manuel'}
+              </button>
+            );
+          })}
         </div>
 
         {/* Auto mode — prévisualisation séparée */}
