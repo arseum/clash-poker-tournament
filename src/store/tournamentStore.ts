@@ -12,10 +12,13 @@ interface TournamentStore {
   prevLevel: () => void;
   startTimer: () => void;
   pauseTimer: () => void;
-  tickTimer: () => void;
+  tickTimer: (seconds?: number) => void;
   resetTimer: () => void;
   updateSecondsRemaining: (seconds: number) => void;
   redistributeTables: () => void;
+  movePlayerToTable: (playerId: string, targetTableId: string) => void;
+  addTable: () => void;
+  removeTable: (tableId: string) => void;
   endTournament: () => void;
   clearTournament: () => void;
 }
@@ -178,26 +181,36 @@ export const useTournamentStore = create<TournamentStore>()(
         };
       }),
 
-      tickTimer: () => set(state => {
+      tickTimer: (seconds = 1) => set(state => {
         if (!state.tournament || !state.tournament.isRunning) return state;
-        const newSeconds = state.tournament.secondsRemaining - 1;
-        if (newSeconds <= 0) {
-          const nextIdx = Math.min(
-            state.tournament.currentLevelIndex + 1,
-            state.tournament.config.blindStructure.length - 1
-          );
-          const nextLevel = state.tournament.config.blindStructure[nextIdx];
+        const { blindStructure } = state.tournament.config;
+        let remaining = state.tournament.secondsRemaining - seconds;
+        let levelIdx = state.tournament.currentLevelIndex;
+
+        // Avance autant de niveaux que nécessaire (rattrapage si tab caché)
+        while (remaining <= 0 && levelIdx < blindStructure.length - 1) {
+          levelIdx++;
+          remaining += blindStructure[levelIdx].duration * 60;
+        }
+
+        // Dernier niveau épuisé → arrêt
+        if (remaining <= 0) {
           return {
             tournament: {
               ...state.tournament,
-              currentLevelIndex: nextIdx,
-              secondsRemaining: nextLevel.duration * 60,
-              isRunning: nextIdx !== state.tournament.currentLevelIndex,
+              currentLevelIndex: levelIdx,
+              secondsRemaining: 0,
+              isRunning: false,
             }
           };
         }
+
         return {
-          tournament: { ...state.tournament, secondsRemaining: newSeconds }
+          tournament: {
+            ...state.tournament,
+            currentLevelIndex: levelIdx,
+            secondsRemaining: remaining,
+          }
         };
       }),
 
@@ -243,6 +256,39 @@ export const useTournamentStore = create<TournamentStore>()(
 
         return {
           tournament: { ...state.tournament, tables, players: updatedPlayers }
+        };
+      }),
+
+      movePlayerToTable: (playerId, targetTableId) => set(state => {
+        if (!state.tournament) return state;
+        const tables = state.tournament.tables.map(t => ({
+          ...t,
+          playerIds: t.playerIds.filter(id => id !== playerId),
+        })).map(t =>
+          t.id === targetTableId ? { ...t, playerIds: [...t.playerIds, playerId] } : t
+        );
+        const players = state.tournament.players.map(p =>
+          p.id === playerId ? { ...p, tableId: targetTableId } : p
+        );
+        return { tournament: { ...state.tournament, tables, players } };
+      }),
+
+      addTable: () => set(state => {
+        if (!state.tournament) return state;
+        const nextNum = state.tournament.tables.length + 1;
+        const newTable: Table = { id: generateId(), name: `Table ${nextNum}`, playerIds: [] };
+        return { tournament: { ...state.tournament, tables: [...state.tournament.tables, newTable] } };
+      }),
+
+      removeTable: (tableId) => set(state => {
+        if (!state.tournament) return state;
+        const table = state.tournament.tables.find(t => t.id === tableId);
+        if (!table || table.playerIds.length > 0) return state;
+        return {
+          tournament: {
+            ...state.tournament,
+            tables: state.tournament.tables.filter(t => t.id !== tableId),
+          }
         };
       }),
 

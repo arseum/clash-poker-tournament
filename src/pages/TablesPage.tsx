@@ -1,4 +1,5 @@
-import { ArrowLeftRight, Users, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeftRight, Users, AlertTriangle, Plus, X } from 'lucide-react';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRBadge } from '../components/ui/CRBadge';
@@ -10,7 +11,8 @@ interface TablesPageProps {
 }
 
 export function TablesPage({ onNavigate }: TablesPageProps) {
-  const { tournament, redistributeTables } = useTournamentStore();
+  const { tournament, redistributeTables, movePlayerToTable, addTable, removeTable } = useTournamentStore();
+  const [dragOverTableId, setDragOverTableId] = useState<string | null>(null);
 
   if (!tournament) {
     return (
@@ -27,6 +29,18 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
   const activePlayers = players.filter(p => !p.isEliminated);
   const idealPerTable = config.maxPlayersPerTable;
 
+  function handleDragStart(e: React.DragEvent, playerId: string) {
+    e.dataTransfer.setData('playerId', playerId);
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDrop(e: React.DragEvent, targetTableId: string) {
+    e.preventDefault();
+    const playerId = e.dataTransfer.getData('playerId');
+    if (playerId) movePlayerToTable(playerId, targetTableId);
+    setDragOverTableId(null);
+  }
+
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-5xl mx-auto">
@@ -35,10 +49,17 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
           <div>
             <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-cr-gold">Tables</h1>
             <p className="text-cr-blue-light text-sm mt-1">
-              {activePlayers.length} joueurs — {tables.length} tables
+              {activePlayers.length} joueurs — {tables.length} tables · glisser-déposer pour déplacer
             </p>
           </div>
           <div className="flex gap-3">
+            <CRButton
+              variant="green"
+              onClick={addTable}
+              className="flex items-center gap-2"
+            >
+              <Plus size={18} /> Ajouter table
+            </CRButton>
             <CRButton
               variant="blue"
               onClick={redistributeTables}
@@ -62,41 +83,66 @@ export function TablesPage({ onNavigate }: TablesPageProps) {
 
             const isFull = tablePlayers.length >= idealPerTable;
             const isEmpty = tablePlayers.length === 0;
-
-            if (isEmpty) return null;
+            const isDragOver = dragOverTableId === table.id;
 
             return (
-              <CRCard key={table.id} gold={tablePlayers.length <= 3}>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-cinzel font-bold text-cr-gold text-lg">{table.name}</h3>
-                  <CRBadge variant={isFull ? 'red' : tablePlayers.length <= 4 ? 'gold' : 'green'}>
-                    <Users size={12} className="mr-1" />
-                    {tablePlayers.length}/{idealPerTable}
-                  </CRBadge>
-                </div>
+              <div
+                key={table.id}
+                onDragOver={e => { e.preventDefault(); setDragOverTableId(table.id); }}
+                onDragLeave={() => setDragOverTableId(null)}
+                onDrop={e => handleDrop(e, table.id)}
+              >
+                {isEmpty ? (
+                  <div className={`rounded-xl border-2 border-dashed transition-all duration-150 flex flex-col items-center justify-center min-h-32 gap-2 ${isDragOver ? 'border-cr-gold/70 bg-cr-gold/5 scale-[1.02]' : 'border-cr-card-border/40'}`}>
+                    <h3 className="font-cinzel font-bold text-[#525265] text-base">{table.name}</h3>
+                    <p className="text-xs text-[#525265]">Glisser un joueur ici</p>
+                    <button
+                      onClick={() => removeTable(table.id)}
+                      className="mt-1 text-[#525265] hover:text-cr-red transition-colors p-1 rounded"
+                      title="Supprimer la table"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <CRCard
+                    gold={tablePlayers.length <= 3}
+                    className={`transition-all duration-150 ${isDragOver ? 'ring-2 ring-cr-gold/70 scale-[1.02]' : ''}`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-cinzel font-bold text-cr-gold text-lg">{table.name}</h3>
+                      <CRBadge variant={isFull ? 'red' : tablePlayers.length <= 4 ? 'gold' : 'green'}>
+                        <Users size={12} className="mr-1" />
+                        {tablePlayers.length}/{idealPerTable}
+                      </CRBadge>
+                    </div>
 
-                {/* Poker table visual */}
-                <div className="bg-[#0d1b2a] rounded-xl p-3 mb-3">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {tablePlayers.map(player => (
-                      <div
-                        key={player!.id}
-                        className="bg-[#2456a4]/30 border border-[#2456a4]/50 rounded-lg px-2 py-1.5 text-center"
-                      >
-                        <span className="text-xs text-[#e8e8e8] font-medium truncate block">
-                          {player!.name}
-                        </span>
+                    {/* Poker table visual */}
+                    <div className={`bg-[#0d1b2a] rounded-xl p-3 mb-3 transition-colors duration-150 ${isDragOver ? 'bg-[#1a3050]' : ''}`}>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {tablePlayers.map(player => (
+                          <div
+                            key={player!.id}
+                            draggable
+                            onDragStart={e => handleDragStart(e, player!.id)}
+                            className="bg-[#2456a4]/30 border border-[#2456a4]/50 rounded-lg px-2 py-1.5 text-center cursor-grab active:cursor-grabbing active:opacity-50 hover:border-cr-gold/50 hover:bg-[#2456a4]/50 transition-colors select-none"
+                          >
+                            <span className="text-xs text-[#e8e8e8] font-medium truncate block">
+                              {player!.name}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
+                    </div>
 
-                {tablePlayers.length <= 3 && (
-                  <div className="flex items-center justify-center gap-1.5 text-xs text-cr-gold/70 font-cinzel tracking-wide">
-                    <AlertTriangle size={11} /> Table courte — redistribution conseillée
-                  </div>
+                    {tablePlayers.length <= 3 && (
+                      <div className="flex items-center justify-center gap-1.5 text-xs text-cr-gold/70 font-cinzel tracking-wide">
+                        <AlertTriangle size={11} /> Table courte — redistribution conseillée
+                      </div>
+                    )}
+                  </CRCard>
                 )}
-              </CRCard>
+              </div>
             );
           })}
         </div>

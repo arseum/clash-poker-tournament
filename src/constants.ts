@@ -34,6 +34,19 @@ export const DEFAULT_BLIND_STRUCTURE: BlindLevel[] = [
   { level: 20, smallBlind: 8000, bigBlind: 16000, ante: 2000, duration: 20 },
 ];
 
+export const TV_BG_KEY     = 'poker-tv-bg';
+export const TV_EFFECT_KEY = 'poker-tv-effect';
+
+export const ARENA_BACKGROUNDS: { label: string; path: string }[] = [
+  { label: 'Arène Classique',  path: '/arenas/arene_classique.jpg' },
+  { label: 'Arène Légendaire', path: '/arenas/arene_legendaire.jpg' },
+  { label: 'Boule de Feu',     path: '/arenas/boule_de_feu.jpg' },
+  { label: 'Ballon Géant',     path: '/arenas/ballon_geant.jpg' },
+  { label: 'Fond Montagne',    path: '/arenas/fond_montagne.webp' },
+];
+
+export const DEFAULT_TV_BG = ARENA_BACKGROUNDS[0].path;
+
 export const formatChips = (amount: number): string => {
   if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M`;
   if (amount >= 1000) return `${(amount / 1000).toFixed(0)}K`;

@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 
+import { useRef } from 'react';
 import { Play, Pause, SkipForward, SkipBack, RotateCcw, UserMinus, Trophy, Undo2, Tv } from 'lucide-react';
+import { LevelTransitionOverlay, pickRandomEffect } from '../components/LevelTransitionOverlay';
+import type { TransitionEffect } from '../components/LevelTransitionOverlay';
 import { CRCard } from '../components/ui/CRCard';
 import { CRButton } from '../components/ui/CRButton';
 import { CRBadge } from '../components/ui/CRBadge';
 import { EndTournamentOverlay } from '../components/EndTournamentOverlay';
 import { useTournamentStore } from '../store/tournamentStore';
 import { useHistoryStore } from '../store/historyStore';
-import { useTimer } from '../hooks/useTimer';
-import { formatTime, formatChips } from '../constants';
+import { formatTime, formatChips, TV_BG_KEY, TV_EFFECT_KEY, ARENA_BACKGROUNDS, DEFAULT_TV_BG } from '../constants';
 import { calculatePrizes, getPaidPlaces, positionLabel } from '../utils/prizePool';
 import type { Page } from '../types';
 
@@ -17,8 +19,6 @@ interface TournamentPageProps {
 }
 
 export function TournamentPage({ onNavigate }: TournamentPageProps) {
-  useTimer();
-
   const {
     tournament,
     startTimer,
@@ -34,6 +34,29 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
   const { addEntry } = useHistoryStore();
 
   const [showEnd, setShowEnd] = useState(false);
+  const [playerSearch, setPlayerSearch] = useState('');
+  const [transition, setTransition] = useState<{ effect: TransitionEffect; label: string } | null>(null);
+  const prevLevelRef = useRef(tournament?.currentLevelIndex ?? 0);
+  const [tvBg, setTvBg] = useState(() => localStorage.getItem(TV_BG_KEY) ?? DEFAULT_TV_BG);
+
+  function handleTvBgChange(path: string) {
+    setTvBg(path);
+    localStorage.setItem(TV_BG_KEY, path);
+  }
+
+  // Détection du changement de niveau → animation aléatoire, syncée vers la TV
+  useEffect(() => {
+    if (!tournament) return;
+    const newIdx = tournament.currentLevelIndex;
+    if (newIdx !== prevLevelRef.current) {
+      prevLevelRef.current = newIdx;
+      const level = tournament.config.blindStructure[newIdx];
+      const label = level.isBreak ? 'PAUSE' : `NIVEAU ${level.level}`;
+      const effect = pickRandomEffect();
+      localStorage.setItem(TV_EFFECT_KEY, JSON.stringify({ effect, label, ts: Date.now() }));
+      setTransition({ effect, label });
+    }
+  }); // eslint-disable-line react-hooks/exhaustive-deps
 
   const activePlayers = tournament?.players.filter(p => !p.isEliminated) ?? [];
   const totalPlayers = tournament?.players.length ?? 0;
@@ -99,6 +122,14 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
       {showEnd && (
         <EndTournamentOverlay tournament={tournament} onClose={handleCloseEnd} />
       )}
+      {transition && (
+        <LevelTransitionOverlay
+          effect={transition.effect}
+          levelLabel={transition.label}
+          tvBg={tvBg}
+          onDone={() => setTransition(null)}
+        />
+      )}
 
       {/* Title bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -106,10 +137,20 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
         <div className="flex gap-2 flex-shrink-0">
           <CRButton variant="ghost" size="sm" onClick={() => onNavigate('tables')}>Tables</CRButton>
           <CRButton variant="ghost" size="sm" onClick={() => onNavigate('history')} className="hidden sm:flex">Historique</CRButton>
+          <select
+            value={tvBg}
+            onChange={e => handleTvBgChange(e.target.value)}
+            title="Fond écran TV"
+            className="text-xs rounded-lg px-2 py-1.5 bg-cr-darker border border-cr-card-border text-[#a0a0b8] focus:outline-none focus:border-cr-gold/50 cursor-pointer"
+          >
+            {ARENA_BACKGROUNDS.map(bg => (
+              <option key={bg.path} value={bg.path}>{bg.label}</option>
+            ))}
+          </select>
           <CRButton
             variant="blue"
             size="sm"
-            onClick={() => window.open('/?display', 'poker-tv', 'width=1920,height=1080')}
+            onClick={() => window.open('/?display', 'poker-tv', 'popup=true,width=1920,height=1080')}
             className="flex items-center gap-1.5"
           >
             <Tv size={15} /> TV
@@ -253,13 +294,20 @@ export function TournamentPage({ onNavigate }: TournamentPageProps) {
 
         {/* Players sidebar */}
         <CRCard className="max-h-72 lg:max-h-screen overflow-y-auto">
-          <h2 className="font-cinzel text-base font-bold text-cr-gold mb-4 flex items-center gap-2">
+          <h2 className="font-cinzel text-base font-bold text-cr-gold mb-3 flex items-center gap-2">
             <span className="cr-supercell-only !block"><img src="/clash_royal_todo/crown-blue.png" alt="" className="w-6 h-6 object-contain" /></span>
             <span className="cr-default-only !block"><Trophy size={18} /></span>
             Joueurs actifs ({activePlayers.length})
           </h2>
+          <input
+            type="text"
+            placeholder="Rechercher..."
+            value={playerSearch}
+            onChange={e => setPlayerSearch(e.target.value)}
+            className="w-full mb-3 px-3 py-1.5 text-sm rounded-lg bg-cr-darker border border-cr-card-border text-[#e8e8e8] placeholder-[#525265] focus:outline-none focus:border-cr-gold/50"
+          />
           <div className="flex flex-col">
-            {activePlayers.map(player => (
+            {activePlayers.filter(p => p.name.toLowerCase().includes(playerSearch.toLowerCase())).map(player => (
               <div
                 key={player.id}
                 className="flex items-center justify-between py-2.5 border-b border-cr-card-border/30 last:border-0"

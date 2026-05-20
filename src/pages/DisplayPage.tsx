@@ -1,22 +1,47 @@
-import { useEffect, useState } from 'react';
-import { useTournamentStore } from '../store/tournamentStore';
-import { formatTime, formatChips } from '../constants';
+import { useEffect, useRef, useState } from 'react';
+import { TV_SYNC_KEY } from '../timer';
+import { formatTime, formatChips, TV_BG_KEY, TV_EFFECT_KEY, DEFAULT_TV_BG } from '../constants';
 import { calculatePrizes, getPaidPlaces, positionLabel } from '../utils/prizePool';
 import { useTheme } from '../contexts/ThemeContext';
+import { LevelTransitionOverlay } from '../components/LevelTransitionOverlay';
+import type { TransitionEffect } from '../components/LevelTransitionOverlay';
 import type { TournamentState, Player } from '../types';
 
+function readInitialState(): TournamentState | null {
+  const syncRaw = localStorage.getItem(TV_SYNC_KEY);
+  if (syncRaw) { try { return JSON.parse(syncRaw) as TournamentState; } catch { /* ignore */ } }
+  const storeRaw = localStorage.getItem('poker-tournament-state');
+  if (storeRaw) { try { return JSON.parse(storeRaw).state?.tournament ?? null; } catch { /* ignore */ } }
+  return null;
+}
+
 export function DisplayPage() {
-  const tournament = useTournamentStore(s => s.tournament);
+  const [tournament, setTournament] = useState<TournamentState | null>(readInitialState);
+  const [tvBg, setTvBg] = useState(() => localStorage.getItem(TV_BG_KEY) ?? DEFAULT_TV_BG);
+  const [transition, setTransition] = useState<{ effect: TransitionEffect; label: string } | null>(null);
   const { theme } = useTheme();
 
   useEffect(() => {
-    const handleStorage = () => useTournamentStore.persist.rehydrate();
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === TV_SYNC_KEY && e.newValue) {
+        try { setTournament(JSON.parse(e.newValue)); } catch { /* ignore */ }
+      }
+      if (e.key === TV_BG_KEY && e.newValue) {
+        setTvBg(e.newValue);
+      }
+      if (e.key === TV_EFFECT_KEY && e.newValue) {
+        try {
+          const { effect, label } = JSON.parse(e.newValue);
+          setTransition({ effect, label });
+        } catch { /* ignore */ }
+      }
+    };
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
-  if (!tournament) return <DisplayIdle theme={theme} />;
-  if (tournament.isEnded) return <EndScreenTV tournament={tournament} theme={theme} />;
+  if (!tournament) return <DisplayIdle theme={theme} tvBg={tvBg} />;
+  if (tournament.isEnded) return <EndScreenTV tournament={tournament} theme={theme} tvBg={tvBg} />;
 
   const { config, players, currentLevelIndex, secondsRemaining } = tournament;
   const currentLevel  = config.blindStructure[currentLevelIndex];
@@ -32,20 +57,35 @@ export function DisplayPage() {
   const isWarning     = secondsRemaining <= 60 && !currentLevel.isBreak;
   const isSC          = theme === 'supercell';
 
+  // Niveau de tremblement 0-6 progressif (monte toutes les ~10s sous la minute)
+  const shakeLevel = isWarning ? Math.min(6, Math.floor((60 - secondsRemaining) / 10) + 1) : 0;
+  const shakeDuration = [0, 500, 420, 330, 260, 200, 140][shakeLevel];
+  const shakeStyle: React.CSSProperties = shakeLevel > 0 ? {
+    animation: `tv-shake-${shakeLevel} ${shakeDuration}ms ease-in-out infinite`,
+  } : {};
+
   const gold  = isSC ? '#f4c842' : '#f4c842';
   const accent = isSC ? '#8899cc' : '#4a8fd4';
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {transition && (
+        <LevelTransitionOverlay
+          effect={transition.effect}
+          levelLabel={transition.label}
+          tvBg={tvBg}
+          onDone={() => setTransition(null)}
+        />
+      )}
       {/* Background */}
       {isSC ? (
         <>
-          <video
+          <img
             className="absolute inset-0 w-full h-full object-cover"
-            src="/arenas/arena_test.webm"
-            autoPlay loop muted playsInline
+            src={tvBg}
+            alt=""
           />
-          <div className="absolute inset-0" style={{ background: 'rgba(10,16,32,0.68)' }} />
+          <div className="absolute inset-0" style={{ background: 'rgba(10,16,32,0.35)' }} />
           <div className="absolute inset-0" style={{
             background: 'radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(0,0,0,0.50) 100%)',
           }} />
@@ -65,10 +105,13 @@ export function DisplayPage() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div
+        className={`relative z-10 flex flex-col min-h-screen${transition?.effect === 'radial' ? ' wave-active' : ''}`}
+        style={shakeStyle}
+      >
 
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-7 pb-2 sm:pb-3 gap-2">
+        <div data-wave="1" className="flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-7 pb-2 sm:pb-3 gap-2">
           <div className="font-cinzel text-sm sm:text-xl lg:text-2xl font-bold tracking-widest uppercase truncate"
             style={{ color: gold, opacity: 0.90, textShadow: '0 2px 0 rgba(0,0,0,0.7)' }}>
             {isSC
@@ -87,6 +130,7 @@ export function DisplayPage() {
 
           {/* Timer */}
           <div
+            data-wave="0"
             className={`font-cinzel font-black leading-none tracking-tight select-none transition-colors ${isWarning ? 'animate-pulse' : ''}`}
             style={{
               fontSize: 'clamp(5rem, 22vw, 20rem)',
@@ -103,7 +147,7 @@ export function DisplayPage() {
 
           {/* Blinds */}
           {!currentLevel.isBreak && (
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-8 lg:gap-12">
+            <div data-wave="2" className="flex flex-wrap items-center justify-center gap-3 sm:gap-8 lg:gap-12">
               <BlindBlock label="Petite blinde" value={formatChips(currentLevel.smallBlind)} isSC={isSC} />
               <div className="text-4xl sm:text-7xl font-thin" style={{ color: accent }}>/</div>
               <BlindBlock label="Grande blinde" value={formatChips(currentLevel.bigBlind)} isSC={isSC} />
@@ -118,7 +162,7 @@ export function DisplayPage() {
 
           {/* Next level */}
           {nextLevel && (
-            <div className="text-[#4a5568] text-xs sm:text-lg lg:text-xl font-cinzel tracking-wide text-center px-2">
+            <div data-wave="3" className="text-[#4a5568] text-xs sm:text-lg lg:text-xl font-cinzel tracking-wide text-center px-2">
               Prochain →{' '}
               {nextLevel.isBreak
                 ? 'PAUSE'
@@ -130,15 +174,15 @@ export function DisplayPage() {
         </div>
 
         {/* Progress bar — CR style */}
-        <div className="w-full cr-timer-bar-track">
+        <div data-wave="4" className="w-full cr-timer-bar-track">
           <div
-            className={`cr-timer-bar-fill cr-timer-bar-blue${isWarning ? ' cr-timer-bar-warning' : ''}`}
+            className={`cr-timer-bar-fill${isWarning ? ' cr-timer-bar-warning' : ' cr-timer-bar-blue'}`}
             style={{ width: `${levelProgress * 100}%` }}
           />
         </div>
 
         {/* Bottom stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 border-t border-white/10">
+        <div data-wave="5" className="grid grid-cols-2 sm:grid-cols-4 border-t border-white/10">
           <StatBlock label="Joueurs" value={String(activePlayers.length)} sub={`/ ${players.length}`} color={gold} />
           <StatBlock label="Stack moyen" value={formatChips(avgStack)} color="#ffffff" />
           <StatBlock label="Pot total" value={`${totalPot}€`} color="#27ae60" />
@@ -192,14 +236,14 @@ export function DisplayPage() {
 
 /* ── Sub-components ── */
 
-function DisplayIdle({ theme }: { theme: string }) {
+function DisplayIdle({ theme, tvBg }: { theme: string; tvBg: string }) {
   const isSC = theme === 'supercell';
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 sm:gap-8 relative">
       {isSC ? (
         <>
-          <video className="absolute inset-0 w-full h-full object-cover"
-            src="/arenas/arena_test.webm" autoPlay loop muted playsInline />
+          <img className="absolute inset-0 w-full h-full object-cover"
+               src={tvBg} alt="" />
           <div className="absolute inset-0" style={{ background: 'rgba(10,16,32,0.70)' }} />
         </>
       ) : (
@@ -298,7 +342,7 @@ function buildPodiumTV(tournament: TournamentState): Player[] {
   return [winner, eliminated[0], eliminated[1]].filter(Boolean) as Player[];
 }
 
-function EndScreenTV({ tournament, theme }: { tournament: TournamentState; theme: string }) {
+function EndScreenTV({ tournament, theme, tvBg }: { tournament: TournamentState; theme: string; tvBg: string }) {
   const [revealed, setRevealed] = useState<number[]>([]);
   const isSC = theme === 'supercell';
 
@@ -307,8 +351,9 @@ function EndScreenTV({ tournament, theme }: { tournament: TournamentState; theme
   const prizeAmount = Math.round(totalPot * tournament.config.prizePool.prizePoolPct / 100);
   const prizes      = calculatePrizes(prizeAmount, tournament.players.length, tournament.config.prizePool);
   const getPrize    = (position: number) => prizes.find(p => p.position === position)?.amount ?? 0;
+  const nowRef = useRef(Date.now());
   const durationMin = tournament.startedAt
-    ? Math.round((Date.now() - tournament.startedAt) / 60000)
+    ? Math.round((nowRef.current - tournament.startedAt) / 60000)
     : 0;
 
   useEffect(() => {
@@ -323,8 +368,8 @@ function EndScreenTV({ tournament, theme }: { tournament: TournamentState; theme
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
       {isSC ? (
         <>
-          <video className="absolute inset-0 w-full h-full object-cover"
-            src="/arenas/arena_test.webm" autoPlay loop muted playsInline />
+          <img className="absolute inset-0 w-full h-full object-cover"
+               src={tvBg} alt="" />
           <div className="absolute inset-0" style={{ background: 'rgba(10,16,32,0.82)' }} />
         </>
       ) : (
